@@ -69,11 +69,9 @@ public class GoogleHttpConsumerFootball extends HttpServlet {
         url.set("season","2017");
         //data.put("season", "2017");
         HttpRequest requestGoogle = requestFactory.buildGetRequest(url);
-        requestGoogle.getHeaders().set("X-Auth-Token", "");
-
-        
+        requestGoogle.getHeaders().set("X-Auth-Token", config.Configuration.getInstance().getIdemt());
         response.getWriter().print(requestGoogle.execute().parseAsString());
-        Type type = new TypeToken<List<GenericJson>>(){}.getType();
+        Type type = new TypeToken<List<GenericJson>>(){}.getType(); //usar solo cuando nos devuelve una lista 
         List<GenericJson> json = (List)requestGoogle.execute().parseAs(type);
 
         response.getWriter().print(json.get(0).toPrettyString());

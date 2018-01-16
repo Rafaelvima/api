@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package servlets;
+package Prueba;
 
 import com.google.api.client.http.EmptyContent;
 import com.google.api.client.http.GenericUrl;
@@ -27,7 +27,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import model.Arrives;
 
 /**
  *
@@ -61,21 +60,16 @@ public class GoogleHttpConsumingApi extends HttpServlet {
         GenericUrl url = new GenericUrl("https://openbus.emtmadrid.es:9443/emt-proxy-server/last/geo/GetArriveStop.php");
 
         GenericData data = new GenericData();
-        data.put("idClient", "WEB.SERV.oscar.novillo@iesquevedo.es");
-        data.put("passKey", "");
+        data.put("idClient",config.Configuration.getInstance().getIdemt());
+        data.put("passKey", config.Configuration.getInstance().getKeyemt());
         data.put("idStop", "3727");
 
         HttpRequest requestGoogle = requestFactory.buildPostRequest(url, new UrlEncodedContent(data));
-        requestGoogle.getHeaders().set("X-Auth-Token", "");
-        url.set("idClient", "WEB.SERV.oscar.novillo@iesquevedo.es");
-        url.set("passKey", "");
-        url.set("idStop", "3727");
 
-        //url = new GenericUrl("http://api.football-data.org/v1/teams/745/players");
-        Arrives arr = requestGoogle.execute().parseAs(Arrives.class);
-        GenericJson json = requestGoogle.execute().parseAs(GenericJson.class);
-        //response.getWriter().print(arr.getArrives().size());
 
+         GenericJson json = requestGoogle.execute().parseAs(GenericJson.class);
+
+         request.setAttribute("json", json);
         ArrayList arrives = (ArrayList) json.get("arrives");
         response.getWriter().print("<html><body>");
         for (int i = 0; i < arrives.size(); i++) {
@@ -87,8 +81,8 @@ public class GoogleHttpConsumingApi extends HttpServlet {
         }
         
         data = new GenericData();
-        data.put("idClient", "WEB.SERV.oscar.novillo@iesquevedo.es");
-        data.put("passKey", "");
+        data.put("idClient",config.Configuration.getInstance().getIdemt());
+        data.put("passKey", config.Configuration.getInstance().getKeyemt());
         data.put("line", "76");
         data.put("direction", "PLAZA BEATA");
         url = new GenericUrl("https://openbus.emtmadrid.es:9443/emt-proxy-server/last/geo/GetStopsLine.php");
@@ -104,20 +98,6 @@ public class GoogleHttpConsumingApi extends HttpServlet {
            
             response.getWriter().print("<br>");
         }
-      
-      
-      
-      
-
-
-        url = new GenericUrl("http://api.football-data.org/v1/competitions/");
-        //url.set("season","2017");
-        //data.put("season", "2017");
-        requestGoogle = requestFactory.buildPostRequest(url,new UrlEncodedContent(data));
-        requestGoogle.getHeaders().set("X-Auth-Token", "");
-        json = requestGoogle.execute().parseAs(GenericJson.class);
-
-        response.getWriter().print(json.toPrettyString());
         
         
         
