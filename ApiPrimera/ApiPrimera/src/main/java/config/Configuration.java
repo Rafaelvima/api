@@ -59,6 +59,15 @@ public class Configuration {
     
     private String idemt;
     private String keyemt;
+    private String keyfootball;
+
+    public String getKeyfootball() {
+        return keyfootball;
+    }
+
+    public void setKeyfootball(String keyfootball) {
+        this.keyfootball = keyfootball;
+    }
 
     public String getIdemt() {
         return idemt;
