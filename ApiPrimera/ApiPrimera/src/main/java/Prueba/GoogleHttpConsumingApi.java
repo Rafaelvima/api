@@ -60,8 +60,8 @@ public class GoogleHttpConsumingApi extends HttpServlet {
         GenericUrl url = new GenericUrl("https://openbus.emtmadrid.es:9443/emt-proxy-server/last/geo/GetArriveStop.php");
 
         GenericData data = new GenericData();
-        data.put("idClient",config.Configuration.getInstance().getIdemt());
-        data.put("passKey", config.Configuration.getInstance().getKeyemt());
+        data.put("idClient","WEB.SERV.rafacanomo@gmail.com");
+        data.put("passKey", "3C162353-56FE-4572-9FB4-ED7D2D79E58E");
         data.put("idStop", "3727");
 
         HttpRequest requestGoogle = requestFactory.buildPostRequest(url, new UrlEncodedContent(data));
@@ -81,8 +81,8 @@ public class GoogleHttpConsumingApi extends HttpServlet {
         }
         
         data = new GenericData();
-        data.put("idClient",config.Configuration.getInstance().getIdemt());
-        data.put("passKey", config.Configuration.getInstance().getKeyemt());
+        data.put("idClient","WEB.SERV.rafacanomo@gmail.com");
+        data.put("passKey", "3C162353-56FE-4572-9FB4-ED7D2D79E58E");
         data.put("line", "76");
         data.put("direction", "PLAZA BEATA");
         url = new GenericUrl("https://openbus.emtmadrid.es:9443/emt-proxy-server/last/geo/GetStopsLine.php");
@@ -91,6 +91,7 @@ public class GoogleHttpConsumingApi extends HttpServlet {
         
       ArrayList stops = (ArrayList) json.get("stop");
       response.getWriter().print(json.get("destination"));
+      response.getWriter().print(stops.size());
       for (int i = 0; i < stops.size(); i++) {
             ArrayMap stop = (ArrayMap)stops.get(i);
             response.getWriter().print(stop.get("stopId")+" ");
