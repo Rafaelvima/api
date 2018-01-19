@@ -69,17 +69,19 @@ public class GoogleHttpConsumingApi extends HttpServlet {
 
          GenericJson json = requestGoogle.execute().parseAs(GenericJson.class);
 
-         request.setAttribute("json", json);
+         
         ArrayList arrives = (ArrayList) json.get("arrives");
-        response.getWriter().print("<html><body>");
-        for (int i = 0; i < arrives.size(); i++) {
+        request.setAttribute("llegadas", arrives);
+        request.getRequestDispatcher("pintarListaAlumnos.jsp").forward(request, response);
+
+       /* for (int i = 0; i < arrives.size(); i++) {
             ArrayMap arrive = (ArrayMap)arrives.get(i);
             response.getWriter().print(arrive.get("busTimeLeft")+" ");
             response.getWriter().print(arrive.get("lineId")+" ");
             response.getWriter().print(arrive.get("busDistance")+" ");
             response.getWriter().print("<br>");
-        }
-        
+        }*/
+        /*
         data = new GenericData();
         data.put("idClient","WEB.SERV.rafacanomo@gmail.com");
         data.put("passKey", "3C162353-56FE-4572-9FB4-ED7D2D79E58E");
@@ -102,7 +104,7 @@ public class GoogleHttpConsumingApi extends HttpServlet {
         
         
         
-        response.getWriter().print("</body></html>");
+        response.getWriter().print("</body></html>");*/
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
