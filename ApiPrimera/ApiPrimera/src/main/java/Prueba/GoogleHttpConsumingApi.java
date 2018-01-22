@@ -19,9 +19,16 @@ import com.google.api.client.json.JsonObjectParser;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.ArrayMap;
 import com.google.api.client.util.GenericData;
+import config.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -72,8 +79,19 @@ public class GoogleHttpConsumingApi extends HttpServlet {
          
         ArrayList arrives = (ArrayList) json.get("arrives");
         request.setAttribute("llegadas", arrives);
-        request.getRequestDispatcher("pintarListaAlumnos.jsp").forward(request, response);
-
+        //para jsp
+        //request.getRequestDispatcher("pintaremt.jsp").forward(request, response);
+        //para freemarker
+        try {
+            HashMap root = new HashMap();
+            
+            //root.put("content","hola");
+             root.put("llegadas",arrives);
+             Template temp = Configuration.getInstance().getFreeMarker().getTemplate("Freebus.ftl");
+            temp.process(root, response.getWriter());
+        } catch (TemplateException ex) {
+            Logger.getLogger(GoogleHttpConsumingApi.class.getName()).log(Level.SEVERE, null, ex);
+        } 
        /* for (int i = 0; i < arrives.size(); i++) {
             ArrayMap arrive = (ArrayMap)arrives.get(i);
             response.getWriter().print(arrive.get("busTimeLeft")+" ");
