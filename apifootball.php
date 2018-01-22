@@ -57,7 +57,7 @@ var_dump($json);
     </body>
 
 </html>
-
+<?php
 /*
 $uri = 'http://api.football-data.org/v1/competitions/?season=2017';
 $header = array('headers' => array('X-Auth-Token' => 'f91c48721aa14ab9ba9f12ad3ee1b8c0'));
