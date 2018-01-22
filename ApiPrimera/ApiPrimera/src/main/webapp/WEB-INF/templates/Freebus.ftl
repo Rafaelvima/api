@@ -26,6 +26,12 @@ This is content
                 </td>
                  <td>
                     ${llegada.busTimeLeft}
+                     <script>
+                         if(${llegada.busTimeLeft}>200){
+                             document.write("tiempo muy grande "+ ${llegada.busTimeLeft} );
+                                 
+                        }
+                            </script>
                 </td>
                   <td>
                     ${llegada.busDistance}
