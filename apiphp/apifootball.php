@@ -37,16 +37,14 @@ var_dump($json);
     <body>
         <table> <?php foreach ($json as $competicion) {
     ?>
-                <tr><?php
-                    echo $competicion->id . " " . $competicion->caption . " <br>";
-                ?>
+                <tr>
                 <td>
-                    <a href="#?id=<?php echo $competicion->id ?>">
+                    <a href="http://localhost:8000/apifootball.php?id=<?php echo $competicion->id ?>">
                         <?php echo $competicion->id ?>
                     </a>
                 </td>
                 <td>
-                    <a href="#?id=<?php echo $competicion->id ?>">
+                    <a href="http://localhost:8000/apifootball.php?id=<?php echo $competicion->id ?>">
                         <?php echo $competicion->caption ?>
                     </a>
                 </td>
