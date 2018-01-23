@@ -10,17 +10,17 @@ var_dump($json);
 ?>
 <html>
     <body>
-        <table> <?php foreach ($json as $tablaliga) {
+        <table> <?php foreach ($json as $equipo) {
     ?>
                 <tr>
                 <td>
-                    <a href="#?id=<?php echo $tablaliga->id ?>">
-                        <?php echo $tablaliga->rank  ?>
+                    <a href="http://localhost:8000/apifootball.php?id=<?php echo $equipo->id ?>">
+                        <?php echo $equipo->name  ?>
                     </a>
                 </td>
                 <td>
-                    <a href="#?id=<?php echo $tablaliga->id ?>">
-                        <?php echo $tablaliga->team  ?>
+                    <a href="http://localhost:8000/apifootball.php?id=<?php echo $equipo->id ?>">
+                        <?php echo $equipo->name ?>
                     </a>
                 </td>
             </tr>

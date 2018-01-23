@@ -14,12 +14,12 @@ var_dump($json);
     ?>
                 <tr>
                 <td>
-                    <a href="#?id=<?php echo $tablaliga->id ?>">
+                    <a href="http://localhost:8000/apifootball.php?id=<?php echo $tablaliga->id ?>">
                         <?php echo $tablaliga->rank  ?>
                     </a>
                 </td>
                 <td>
-                    <a href="#?id=<?php echo $tablaliga->id ?>">
+                    <a href="http://localhost:8000/apifootball.php?id=<?php echo $tablaliga->id ?>">
                         <?php echo $tablaliga->team  ?>
                     </a>
                 </td>
