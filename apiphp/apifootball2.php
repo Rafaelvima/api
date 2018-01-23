@@ -2,7 +2,7 @@
 require 'vendor/autoload.php';
 use GuzzleHttp\Client;
 $client = new Client();
-$uri = 'http://api.football-data.org//v1/competitions/{id}/leagueTable';
+$uri = 'http://api.football-data.org/v1/competitions/{id}/leagueTable';
 $header = array('headers' => array('X-Auth-Token' => 'f91c48721aa14ab9ba9f12ad3ee1b8c0'));
 $response = $client->get($uri, $header);
 $json = json_decode($response->getBody());
