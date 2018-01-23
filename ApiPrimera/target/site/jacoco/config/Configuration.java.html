@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Configuration.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ApiPrimera</a> &gt; <a href="index.source.html" class="el_package">config</a> &gt; <span class="el_source">Configuration.java</span></div><h1>Configuration.java</h1><pre class="source lang-java linenums">/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package config;
+
+import freemarker.template.TemplateExceptionHandler;
+import java.io.File;
+import java.io.InputStream;
+import javax.servlet.ServletContext;
+import org.yaml.snakeyaml.Yaml;
+
+/**
+ *
+ * @author oscar
+ */
+public class Configuration {
+
+    private static Configuration config;
+
+<span class="nc" id="L22">    private Configuration() {</span>
+
+<span class="nc" id="L24">    }</span>
+
+    public static Configuration getInstance() {
+
+<span class="nc" id="L28">        return config;</span>
+    }
+
+    public static Configuration getInstance(InputStream file, ServletContext sc) {
+<span class="nc bnc" id="L32" title="All 2 branches missed.">        if (config == null) {</span>
+<span class="nc" id="L33">            Yaml yaml = new Yaml();</span>
+<span class="nc" id="L34">            config = (Configuration) yaml.loadAs(file, Configuration.class);</span>
+// Create your Configuration instance, and specify if up to what FreeMarker
+// version (here 2.3.25) do you want to apply the fixes that are not 100%
+// backward-compatible. See the Configuration JavaDoc for details.
+<span class="nc" id="L38">            config.setFreeMarker(new freemarker.template.Configuration(freemarker.template.Configuration.VERSION_2_3_23));</span>
+
+            // ESTO ES UN COMENTARIO NUEVO.
+            
+// Specify the source where the template files come from. Here I set a
+// plain directory for it, but non-file-system sources are possible too:
+<span class="nc" id="L44">            config.getFreeMarker().setServletContextForTemplateLoading(sc, &quot;WEB-INF/templates&quot;);</span>
+
+// Set the preferred charset template files are stored in. UTF-8 is
+// a good choice in most applications:
+<span class="nc" id="L48">            config.getFreeMarker().setDefaultEncoding(&quot;UTF-8&quot;);</span>
+
+// Sets how errors will appear.
+// During web page *development* TemplateExceptionHandler.HTML_DEBUG_HANDLER is better.
+<span class="nc" id="L52">            config.getFreeMarker().setTemplateExceptionHandler(TemplateExceptionHandler.HTML_DEBUG_HANDLER);</span>
+
+// Don't log exceptions inside FreeMarker that it will thrown at you anyway:
+<span class="nc" id="L55">            config.getFreeMarker().setLogTemplateExceptions(false);</span>
+        }
+<span class="nc" id="L57">        return config;</span>
+    }
+    
+    private String idemt;
+    private String keyemt;
+    private String keyfootball;
+     private freemarker.template.Configuration freeMarker;
+
+    public freemarker.template.Configuration getFreeMarker() {
+<span class="nc" id="L66">        return freeMarker;</span>
+    }
+
+    public void setFreeMarker(freemarker.template.Configuration freeMarker) {
+<span class="nc" id="L70">        this.freeMarker = freeMarker;</span>
+<span class="nc" id="L71">    }</span>
+
+    public String getKeyfootball() {
+<span class="nc" id="L74">        return keyfootball;</span>
+    }
+
+    public void setKeyfootball(String keyfootball) {
+<span class="nc" id="L78">        this.keyfootball = keyfootball;</span>
+<span class="nc" id="L79">    }</span>
+
+    public String getIdemt() {
+<span class="nc" id="L82">        return idemt;</span>
+    }
+
+    public void setIdemt(String idemt) {
+<span class="nc" id="L86">        this.idemt = idemt;</span>
+<span class="nc" id="L87">    }</span>
+
+    public String getKeyemt() {
+<span class="nc" id="L90">        return keyemt;</span>
+    }
+
+    public void setKeyemt(String keyemt) {
+<span class="nc" id="L94">        this.keyemt = keyemt;</span>
+<span class="nc" id="L95">    }</span>
+
+    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GoogleHttpConsumerFootball.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ApiPrimera</a> &gt; <a href="index.source.html" class="el_package">Prueba</a> &gt; <span class="el_source">GoogleHttpConsumerFootball.java</span></div><h1>GoogleHttpConsumerFootball.java</h1><pre class="source lang-java linenums">/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package Prueba;
+
+import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpRequestFactory;
+import com.google.api.client.http.HttpRequestInitializer;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.UrlEncodedContent;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.GenericJson;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.JsonObjectParser;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.util.ArrayMap;
+import com.google.api.client.util.GenericData;
+import com.google.gson.reflect.TypeToken;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+
+import java.lang.reflect.Type;
+import java.util.List;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ *
+ * @author oscar
+ */
+@WebServlet(name = &quot;GoogleHttpConsumerFootball&quot;, urlPatterns = {&quot;/apiF&quot;})
+<span class="nc" id="L39">public class GoogleHttpConsumerFootball extends HttpServlet {</span>
+
+    /**
+     * Processes requests for both HTTP &lt;code&gt;GET&lt;/code&gt; and &lt;code&gt;POST&lt;/code&gt;
+     * methods.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+<span class="nc" id="L52">          HttpTransport HTTP_TRANSPORT = new NetHttpTransport();</span>
+<span class="nc" id="L53">        JsonFactory JSON_FACTORY = new JacksonFactory();</span>
+<span class="nc" id="L54">        HttpRequestFactory requestFactory</span>
+<span class="nc" id="L55">          = HTTP_TRANSPORT.createRequestFactory(new HttpRequestInitializer() {</span>
+              @Override
+              public void initialize(HttpRequest request) {
+<span class="nc" id="L58">                  request.setParser(new JsonObjectParser(JSON_FACTORY));</span>
+<span class="nc" id="L59">              }</span>
+          });
+
+      
+      
+<span class="nc" id="L64">      response.getWriter().print(&quot;&lt;html&gt;&lt;body&gt;&quot;);</span>
+
+
+<span class="nc" id="L67">        GenericUrl url = new GenericUrl(&quot;http://api.football-data.org/v1/competitions/&quot;);</span>
+<span class="nc" id="L68">        url.set(&quot;season&quot;,&quot;2017&quot;);</span>
+        //data.put(&quot;season&quot;, &quot;2017&quot;);
+<span class="nc" id="L70">        HttpRequest requestGoogle = requestFactory.buildGetRequest(url);</span>
+<span class="nc" id="L71">        requestGoogle.getHeaders().set(&quot;X-Auth-Token&quot;, config.Configuration.getInstance().getKeyfootball());</span>
+<span class="nc" id="L72">        response.getWriter().print(requestGoogle.execute().parseAsString());</span>
+<span class="nc" id="L73">        Type type = new TypeToken&lt;List&lt;GenericJson&gt;&gt;(){}.getType(); //usar solo cuando nos devuelve una lista </span>
+<span class="nc" id="L74">        List&lt;GenericJson&gt; json = (List)requestGoogle.execute().parseAs(type);</span>
+
+<span class="nc" id="L76">        response.getWriter().print(json.get(0).toPrettyString());</span>
+        
+        
+        
+<span class="nc" id="L80">        response.getWriter().print(&quot;&lt;/body&gt;&lt;/html&gt;&quot;);</span>
+<span class="nc" id="L81">    }</span>
+
+    // &lt;editor-fold defaultstate=&quot;collapsed&quot; desc=&quot;HttpServlet methods. Click on the + sign on the left to edit the code.&quot;&gt;
+    /**
+     * Handles the HTTP &lt;code&gt;GET&lt;/code&gt; method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+<span class="nc" id="L95">        processRequest(request, response);</span>
+<span class="nc" id="L96">    }</span>
+
+    /**
+     * Handles the HTTP &lt;code&gt;POST&lt;/code&gt; method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+<span class="nc" id="L109">        processRequest(request, response);</span>
+<span class="nc" id="L110">    }</span>
+
+    /**
+     * Returns a short description of the servlet.
+     *
+     * @return a String containing servlet description
+     */
+    @Override
+    public String getServletInfo() {
+<span class="nc" id="L119">        return &quot;Short description&quot;;</span>
+    }// &lt;/editor-fold&gt;
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
