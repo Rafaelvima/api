@@ -6,8 +6,7 @@
             "name": "Rafa",
             "email": "your@email.here"
         }
-    ],
-    "autoload": {
+    ],"autoload": {
         "psr-4": {
              "": "src/"
         }
