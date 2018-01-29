@@ -12,7 +12,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-//import servicios.MandarMail;
+import servicios.MandarMail;
 
 /**
  *
@@ -33,8 +33,8 @@ public class Mail extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
         
-//            MandarMail mail = new MandarMail();
-//            mail.mandarMail("oscar.novillo@gmail.com", "hola", "hola");
+            MandarMail mail = new MandarMail();
+            mail.mandarMail("oscar.novillo@gmail.com", "hola", "hola");
         
     }
 

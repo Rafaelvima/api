@@ -1,7 +1,9 @@
 package config;
 
 
+import com.zaxxer.hikari.HikariDataSource;
 import config.Configuration;
+import dao.DBConnection;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
@@ -26,8 +28,7 @@ public class ConfigListener implements ServletContextListener {
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+       ((HikariDataSource)DBConnection.getInstance().getDataSource()).close();
+        
     }
-
-    
 }

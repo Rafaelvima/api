@@ -56,11 +56,16 @@ public class Configuration {
         }
         return config;
     }
-    
-    private String idemt;
-    private String keyemt;
-    private String keyfootball;
-     private freemarker.template.Configuration freeMarker;
+    private String urlDB;
+    private String driverDB;
+    private String userDB;
+    private String passDB;
+    private String mailFrom;
+    private String smtpServer;
+    private String smtpPort;
+    private String mailPass;
+
+    private freemarker.template.Configuration freeMarker;
 
     public freemarker.template.Configuration getFreeMarker() {
         return freeMarker;
@@ -70,29 +75,68 @@ public class Configuration {
         this.freeMarker = freeMarker;
     }
 
-    public String getKeyfootball() {
-        return keyfootball;
+    public String getUrlDB() {
+        return urlDB;
     }
 
-    public void setKeyfootball(String keyfootball) {
-        this.keyfootball = keyfootball;
+    public void setUrlDB(String urlDB) {
+        this.urlDB = urlDB;
     }
 
-    public String getIdemt() {
-        return idemt;
+    public String getDriverDB() {
+        return driverDB;
     }
 
-    public void setIdemt(String idemt) {
-        this.idemt = idemt;
+    public void setDriverDB(String driverDB) {
+        this.driverDB = driverDB;
     }
 
-    public String getKeyemt() {
-        return keyemt;
+    public String getUserDB() {
+        return userDB;
     }
 
-    public void setKeyemt(String keyemt) {
-        this.keyemt = keyemt;
+    public void setUserDB(String userDB) {
+        this.userDB = userDB;
     }
 
-    
+    public String getPassDB() {
+        return passDB;
+    }
+
+    public void setPassDB(String passDB) {
+        this.passDB = passDB;
+    }
+
+    public String getMailFrom() {
+        return mailFrom;
+    }
+
+    public void setMailFrom(String mailFrom) {
+        this.mailFrom = mailFrom;
+    }
+
+    public String getSmtpServer() {
+        return smtpServer;
+    }
+
+    public void setSmtpServer(String smtpServer) {
+        this.smtpServer = smtpServer;
+    }
+
+    public String getSmtpPort() {
+        return smtpPort;
+    }
+
+    public void setSmtpPort(String smtpPort) {
+        this.smtpPort = smtpPort;
+    }
+
+    public String getMailPass() {
+        return mailPass;
+    }
+
+    public void setMailPass(String mailPass) {
+        this.mailPass = mailPass;
+    }
+
 }

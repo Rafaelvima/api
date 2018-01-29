@@ -1,5 +1,6 @@
 <?php
 require_once 'config\Config.php';
+require_once 'src\controller\Nivel1.php';
 
 /* 
  * To change this license header, choose License Headers in Project Properties.

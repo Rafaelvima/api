@@ -2,12 +2,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.mycompany</groupId>
-    <artifactId>Apicutre</artifactId>
+    <groupId>daw</groupId>
+    <artifactId>baseDatos</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
 
-    <name>Apicutre</name>
+    <name>baseDatos</name>
 
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
@@ -15,13 +15,8 @@
     </properties>
     
     <dependencies>
-        <dependency>
-            <groupId>javax</groupId>
-            <artifactId>javaee-web-api</artifactId>
-            <version>7.0</version>
-            <scope>provided</scope>
-        </dependency>
-         <!-- https://mvnrepository.com/artifact/com.google.http-client/google-http-client -->
+        
+        <!-- https://mvnrepository.com/artifact/com.google.http-client/google-http-client -->
         <dependency>
             <groupId>com.google.http-client</groupId>
             <artifactId>google-http-client</artifactId>
@@ -141,7 +136,14 @@
             <scope>test</scope>
         </dependency>
         
-        
+        <!-- https://mvnrepository.com/artifact/org.hsqldb/hsqldb -->
+<dependency>
+    <groupId>org.hsqldb</groupId>
+    <artifactId>hsqldb</artifactId>
+    <version>2.4.0</version>
+    <scope>test</scope>
+</dependency>
+
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
             <!-- if your container implements Servlet API older than 3.0, use "jersey-container-servlet-core"  -->

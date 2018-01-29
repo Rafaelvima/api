@@ -43,7 +43,7 @@ public class DBConnection {
     }
     
     public Connection getConnection() throws Exception {
-//        Class.forName(Configuration.getInstance().getDriverDB());
+        Class.forName(Configuration.getInstance().getDriverDB());
         Connection connection;
 
 //        connection = DriverManager.getConnection(
@@ -65,10 +65,10 @@ public class DBConnection {
     private DataSource getDataSourceHikari() {
         HikariConfig config = new HikariConfig();
 
-//        config.setJdbcUrl( Configuration.getInstance().getUrlDB());
-//        config.setUsername(Configuration.getInstance().getUserDB());
-//        config.setPassword( Configuration.getInstance().getPassDB());
-//        config.setDriverClassName(Configuration.getInstance().getDriverDB());
+        config.setJdbcUrl( Configuration.getInstance().getUrlDB());
+        config.setUsername(Configuration.getInstance().getUserDB());
+        config.setPassword( Configuration.getInstance().getPassDB());
+        config.setDriverClassName(Configuration.getInstance().getDriverDB());
         config.setMaximumPoolSize(10);
         
         config.addDataSourceProperty("cachePrepStmts", "true");
@@ -82,19 +82,19 @@ public class DBConnection {
 
     public DataSource getDataSource() {
         // Creates a new instance of DriverManagerDataSource and sets
-//        // the required parameters such as the Jdbc Driver class,
-//        MysqlDataSource mysql = new MysqlConnectionPoolDataSource();
-//        mysql.setUrl(Configuration.getInstance().getUrlDB());
-//        mysql.setUser(Configuration.getInstance().getUserDB());
-//        mysql.setPassword(Configuration.getInstance().getPassDB());
-//
-//        // Jdbc URL, database user name and password.
-//        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-//
-//        dataSource.setDriverClassName(Configuration.getInstance().getDriverDB());
-//        dataSource.setUrl(Configuration.getInstance().getUrlDB());
-//        dataSource.setUsername(Configuration.getInstance().getUserDB());
-//        dataSource.setPassword(Configuration.getInstance().getPassDB());
+        // the required parameters such as the Jdbc Driver class,
+        MysqlDataSource mysql = new MysqlConnectionPoolDataSource();
+        mysql.setUrl(Configuration.getInstance().getUrlDB());
+        mysql.setUser(Configuration.getInstance().getUserDB());
+        mysql.setPassword(Configuration.getInstance().getPassDB());
+
+        // Jdbc URL, database user name and password.
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+
+        dataSource.setDriverClassName(Configuration.getInstance().getDriverDB());
+        dataSource.setUrl(Configuration.getInstance().getUrlDB());
+        dataSource.setUsername(Configuration.getInstance().getUserDB());
+        dataSource.setPassword(Configuration.getInstance().getPassDB());
 
         
         //return mysql;
