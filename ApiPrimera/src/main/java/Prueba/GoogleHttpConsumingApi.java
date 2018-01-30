@@ -5,7 +5,6 @@
  */
 package Prueba;
 
-import com.google.api.client.http.EmptyContent;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestFactory;
@@ -17,16 +16,13 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.GenericJson;
 import com.google.api.client.json.JsonObjectParser;
 import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.api.client.util.ArrayMap;
 import com.google.api.client.util.GenericData;
 import config.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -92,37 +88,7 @@ public class GoogleHttpConsumingApi extends HttpServlet {
         } catch (TemplateException ex) {
             Logger.getLogger(GoogleHttpConsumingApi.class.getName()).log(Level.SEVERE, null, ex);
         } 
-       /* for (int i = 0; i < arrives.size(); i++) {
-            ArrayMap arrive = (ArrayMap)arrives.get(i);
-            response.getWriter().print(arrive.get("busTimeLeft")+" ");
-            response.getWriter().print(arrive.get("lineId")+" ");
-            response.getWriter().print(arrive.get("busDistance")+" ");
-            response.getWriter().print("<br>");
-        }*/
-        /*
-        data = new GenericData();
-        data.put("idClient","WEB.SERV.rafacanomo@gmail.com");
-        data.put("passKey", "3C162353-56FE-4572-9FB4-ED7D2D79E58E");
-        data.put("line", "76");
-        data.put("direction", "PLAZA BEATA");
-        url = new GenericUrl("https://openbus.emtmadrid.es:9443/emt-proxy-server/last/geo/GetStopsLine.php");
-        requestGoogle = requestFactory.buildPostRequest(url, new UrlEncodedContent(data));
-        json = requestGoogle.execute().parseAs(GenericJson.class);
-        
-      ArrayList stops = (ArrayList) json.get("stop");
-      response.getWriter().print(json.get("destination"));
-      response.getWriter().print(stops.size());
-      for (int i = 0; i < stops.size(); i++) {
-            ArrayMap stop = (ArrayMap)stops.get(i);
-            response.getWriter().print(stop.get("stopId")+" ");
-            response.getWriter().print(stop.get("name")+" ");
-           
-            response.getWriter().print("<br>");
-        }
-        
-        
-        
-        response.getWriter().print("</body></html>");*/
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

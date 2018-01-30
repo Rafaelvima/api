@@ -25,12 +25,15 @@ This is content
                     ${llegada.stopId}
                 </td>
                  <td>
-                    ${llegada.busTimeLeft}
                      <script>
-                         if(${llegada.busTimeLeft}>200){
-                             document.write("tiempo muy grande "+ ${llegada.busTimeLeft} );
+                         var mins=Math.floor(${llegada.busTimeLeft}/60);
+                             var seg=  ${llegada.busTimeLeft}-mins*60;
+                                 
+                         if(${llegada.busTimeLeft}>900){
+                             document.write("queda mucho tiempo: mas de 15 mins " );
                                  
                         }
+                            else document.write("minutos:"+mins+" segundos:"+seg);
                             </script>
                 </td>
                   <td>
