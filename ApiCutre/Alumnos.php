@@ -7,16 +7,17 @@ and open the template in the editor.
 
 <?php
 require 'vendor/autoload.php';
-    use GuzzleHttp\Client;  
-    $client = new Client();
 
-    $uri = 'http://localhost:8080/Apicutre/rest/cutre';
+use GuzzleHttp\Client;
+
+$client = new Client();
+
+$uri = 'http://localhost:8080/Apicutre/rest/cutre';
 
 // Create connection
-
 // Check connection
- $alumno =  new \stdClass;
- if (isset($_REQUEST['op'])) {
+$alumno = new \stdClass;
+if (isset($_REQUEST['op'])) {
     $op = $_REQUEST['op'];
 } else {
     $op = null;
@@ -50,82 +51,77 @@ if (isset($_REQUEST['mayor'])) {
 }
 switch ($op) {
     case "insert":
-        $alumno->id=$idalu;
-        $alumno->nombre=$nombrealu;
-        $alumno->fecha=$fechaalu;
-        $alumno->mayor=$mayoralu;
+        $alumno->id = $idalu;
+        $alumno->nombre = $nombrealu;
+        $alumno->fecha = $fechaalu;
+        $alumno->mayor = $mayoralu;
         try {
-    $response = $client->put($uri, [
-        'query' => [
-            'alumno' => json_encode($alumno)
-        ]
-    ]);
-    //$alumno = json_decode($response->getBody());  
-echo $alumno->id . " " . $alumno->nombre;
-} catch (RequestException $exception) {
-    
-    echo $exception->getCode();
-    $error  = json_decode($exception->getResponse()->getBody());
-    echo $error->mensaje;
-  
-}
+            $response = $client->put($uri, [
+                'query' => [
+                    'alumno' => json_encode($alumno)
+                ]
+            ]);
+            //$alumno = json_decode($response->getBody());  
+            echo $alumno->id . " " . $alumno->nombre;
+        } catch (RequestException $exception) {
+
+            echo $exception->getCode();
+            $error = json_decode($exception->getResponse()->getBody());
+            echo $error->mensaje;
+        }
         break;
     case "delete":
-         $alumno->id=$idalu;
+        $alumno->id = $idalu;
         try {
-    $response = $client->delete($uri, [
-        'query' => [
-            'alumno' => json_encode($alumno)
-        ]
-    ]);
-    //$alumno = json_decode($response->getBody());  
+            $response = $client->delete($uri, [
+                'query' => [
+                    'alumno' => json_encode($alumno)
+                ]
+            ]);
+            //$alumno = json_decode($response->getBody());  
 //echo $alumno->id . " " . $alumno->nombre;
-} catch (RequestException $exception) {
-    
-    echo $exception->getCode();
-    $error  = json_decode($exception->getResponse()->getBody());
-    echo $error->mensaje;
-  
-}
+        } catch (RequestException $exception) {
+
+            echo $exception->getCode();
+            $error = json_decode($exception->getResponse()->getBody());
+            echo $error->mensaje;
+        }
         break;
     case "update":
-         $alumno->id=$idalu;
-        $alumno->nombre=$nombrealu;
-        $alumno->fecha=$fechaalu;
-        $alumno->mayor=$mayoralu;
+        $alumno->id = $idalu;
+        $alumno->nombre = $nombrealu;
+        $alumno->fecha = $fechaalu;
+        $alumno->mayor = $mayoralu;
         try {
-    $response = $client->post($uri, [
-        'form_params' => [
-            'alumno' => json_encode($alumno)
-        ]
-    ]);
-    //$alumno = json_decode($response->getBody());  
+            $response = $client->post($uri, [
+                'form_params' => [
+                    'alumno' => json_encode($alumno)
+                ]
+            ]);
+            //$alumno = json_decode($response->getBody());  
 //echo $alumno->id . " " . $alumno->nombre;
-} catch (RequestException $exception) {
-    
-    echo $exception->getCode();
-    $error  = json_decode($exception->getResponse()->getBody());
-    echo $error->mensaje;
-  
-}
+        } catch (RequestException $exception) {
+
+            echo $exception->getCode();
+            $error = json_decode($exception->getResponse()->getBody());
+            echo $error->mensaje;
+        }
         break;
     default :
+        echo "<br>" . "GET" . "<br>";
+
         try {
-    $response = $client->get($uri, [
-        'form_params' => [
-            'alumno' => json_encode($alumno)
-        ]
-    ]);
-    //$alumno = json_decode($response->getBody());  
-echo $alumno->id . " " . $alumno->nombre;
-} catch (RequestException $exception) {
-    
-    echo $exception->getCode();
-    $error  = json_decode($exception->getResponse()->getBody());
-    echo $error->mensaje;
-  
-}
-        
+            $uri = 'http://localhost:8080/Apicutre/rest/cutre';
+//$header = array('headers' => array('X-Auth-Token' => '447878d6ad3e4da7bc65bac030cd061e'));
+            $response = $client->get($uri);
+            $alumno = json_decode($response->getBody());
+            echo $alumno->id . " " . $alumno->nombre;
+        } catch (RequestException $exception) {
+
+            echo $exception->getCode();
+            $error = json_decode($exception->getResponse()->getBody());
+            echo $error->mensaje;
+        }
 }
 
 //insertar
@@ -150,22 +146,22 @@ echo $alumno->id . " " . $alumno->nombre;
     <body>
 
         <table border = "1">
-            <?php
-            foreach ($alumnos as $alumno) {
-                ?>
+<?php
+foreach ($alumnos as $alumno) {
+    ?>
                 <tr>
                     <td><input type="button" value="cargar <?php echo $alumno['ID'] ?>" 
                                onclick="cargarAlumno('<?php echo $alumno['ID'] ?>',
-                                               '<?php echo $alumno['NOMBRE'] ?>',
-                                               ' <?php echo $alumno['FECHA_NACIMIENTO'] ?>',
-                                               '<?php if ($alumno['MAYOR_EDAD'] == 1) echo 'checked' ?>')"/>
+                                                   '<?php echo $alumno['NOMBRE'] ?>',
+                                                   ' <?php echo $alumno['FECHA_NACIMIENTO'] ?>',
+                                                   '<?php if ($alumno['MAYOR_EDAD'] == 1) echo 'checked' ?>')"/>
                     </td>
                     <td>
-                        <?php echo $alumno['NOMBRE']; ?>
+                               <?php echo $alumno['NOMBRE']; ?>
                     </td>
 
                     <td>
-                        <?php echo $alumno['FECHA_NACIMIENTO']; ?>
+    <?php echo $alumno['FECHA_NACIMIENTO']; ?>
                     </td>
                     <td>
                         <?php ?><input type="checkbox"  <?php if ($alumno['MAYOR_EDAD'] == 1) echo 'checked' ?>/> 
@@ -173,10 +169,9 @@ echo $alumno->id . " " . $alumno->nombre;
                 </tr>
 
 
-            <?php } ?> <?php
-          
-            echo "FIN";
-            ?>
+<?php } ?> <?php
+echo "FIN";
+?>
             <!-- -->
 
         </table>

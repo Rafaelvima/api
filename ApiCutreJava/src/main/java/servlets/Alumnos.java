@@ -20,97 +20,20 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import java.text.*;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletResponse;
 import model.Alumno;
+import model.ErrorHttp;
 import servicios.AlumnosServicios;
 
 /**
  *
  * @author oscar
  */
-@WebServlet(name = "Alumnos", urlPatterns =
-{
-    "/alumnos"
-})
-public class Alumnos extends HttpServlet
-{
-
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, ParseException
-    {
-
-        Alumno a = new Alumno();
-        LocalDate local = LocalDate.of(1910, Month.MARCH, 12);
-        AlumnosServicios as = new AlumnosServicios();
-        String op = request.getParameter("op");
-        String id = request.getParameter("id");
-        String nombre = request.getParameter("nombre");
-        String fecha = request.getParameter("fecha");
-        String mayor = request.getParameter("mayor");
-        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
-        switch (op)
-        {
-            case "insert":
-                Date fechaDate = format.parse(fecha);
-                a.setNombre(nombre);
-                if (fecha != null)
-                {
-                    a.setFecha_nacimiento(fechaDate);
-                } else
-                {
-                    a.setFecha_nacimiento(Date.from(local.atStartOfDay().toInstant(ZoneOffset.UTC)));
-                }
-
-                if ("on".equals(mayor))
-                {
-                    a.setMayor_edad(Boolean.TRUE);
-                } else
-
-                {
-                    a.setMayor_edad(Boolean.FALSE);
-                }
-                as.addAlumno(a);
-               
-                break;
-
-            case "delete":
-                a.setId(Long.parseLong(id));
-                as.delAlumno(a);
-
-                break;
-            case "update":
-                fechaDate = format.parse(fecha);
-                a.setId(Long.parseLong(id));
-                a.setNombre(nombre);
-                a.setFecha_nacimiento(fechaDate);
-                if ("on".equals(mayor))
-                {
-                    a.setMayor_edad(Boolean.TRUE);
-                } else
-                {
-                    a.setMayor_edad(Boolean.FALSE);
-                }
-                as.updateAlumno(a);
-                break;
-            default:
-                request.setAttribute("alumnos", as.getAllAlumnos());
-                request.getRequestDispatcher("pintarListaAlumnos.jsp").forward(request, response);
-
-        }
-        request.setAttribute("alumnos", as.getAllAlumnos());
-        request.getRequestDispatcher("pintarListaAlumnos.jsp").forward(request, response);
-    }
+@WebServlet(name = "Alumnos", urlPatterns = {"/alumnos"})
+public class Alumnos extends HttpServlet {
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -123,15 +46,80 @@ public class Alumnos extends HttpServlet
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException
-    {
-        try
-        {
-            processRequest(request, response);
-        } catch (ParseException ex)
-        {
+            throws ServletException, IOException {
+        Alumno a = (Alumno) request.getAttribute("alumno");
+        LocalDate local = LocalDate.of(1910, Month.MARCH, 12);
+        AlumnosServicios as = new AlumnosServicios();
+        String op = request.getParameter("op");
+        String id = request.getParameter("id");
+        String nombre = request.getParameter("nombre");
+        String fecha = request.getParameter("fecha");
+        String mayor = request.getParameter("mayor");
+        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+        List<Alumno> alumnos = new ArrayList<>();
+        Alumno alumno = new Alumno();
+        alumno.setNombre("Juan");
+        alumnos.add(alumno);
+        alumno = new Alumno();
+        alumno.setNombre("KIKO");
+        alumnos.add(alumno);
+        request.setAttribute("json", alumnos);
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest request, HttpServletResponse resp) throws ServletException, IOException {
+        Alumno a = (Alumno) request.getAttribute("alumno");
+        LocalDate local = LocalDate.of(1910, Month.MARCH, 12);
+        AlumnosServicios as = new AlumnosServicios();
+        String op = request.getParameter("op");
+        String id = request.getParameter("id");
+        String nombre = request.getParameter("nombre");
+        String fecha = request.getParameter("fecha");
+        String mayor = request.getParameter("mayor");
+        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+        a.setId(Long.parseLong(id));
+        as.delAlumno(a);
+        a.setNombre("DELETE");
+        // if (alumno no se puede borrar)
+        resp.setStatus(500);
+        ErrorHttp error = new ErrorHttp("se rompio");
+
+        request.setAttribute("json", error);
+
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Alumno a = (Alumno) request.getAttribute("alumno");
+        LocalDate local = LocalDate.of(1910, Month.MARCH, 12);
+        AlumnosServicios as = new AlumnosServicios();
+        String op = request.getParameter("op");
+        String id = request.getParameter("id");
+        String nombre = request.getParameter("nombre");
+        String fecha = request.getParameter("fecha");
+        String mayor = request.getParameter("mayor");
+        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+        //
+        Date fechaDate= null;
+        try {
+            fechaDate = format.parse(fecha);
+        } catch (ParseException ex) {
             Logger.getLogger(Alumnos.class.getName()).log(Level.SEVERE, null, ex);
         }
+        a.setId(Long.parseLong(id));
+        a.setNombre(nombre);
+        a.setFecha_nacimiento(fechaDate);
+        if ("on".equals(mayor)) {
+            a.setMayor_edad(Boolean.TRUE);
+        } else {
+            a.setMayor_edad(Boolean.FALSE);
+        }
+        as.updateAlumno(a);
+        //
+        a.setNombre("PUT");
+        Scanner scanner = new Scanner(request.getInputStream(), "UTF-8");
+        String body = scanner.hasNext() ? scanner.useDelimiter("\\A").next() : "";
+        request.setAttribute("json", a);
     }
 
     /**
@@ -144,15 +132,38 @@ public class Alumnos extends HttpServlet
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException
-    {
-        try
-        {
-            processRequest(request, response);
-        } catch (ParseException ex)
-        {
+            throws ServletException, IOException {
+        Alumno a = (Alumno) request.getAttribute("alumno");
+
+        LocalDate local = LocalDate.of(1910, Month.MARCH, 12);
+        AlumnosServicios as = new AlumnosServicios();
+        String op = request.getParameter("op");
+        String id = request.getParameter("id");
+        String nombre = request.getParameter("nombre");
+        String fecha = request.getParameter("fecha");
+        String mayor = request.getParameter("mayor");
+        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+        Date fechaDate=null;
+        try {
+            fechaDate = format.parse(fecha);
+        } catch (ParseException ex) {
             Logger.getLogger(Alumnos.class.getName()).log(Level.SEVERE, null, ex);
         }
+        a.setNombre(nombre);
+        if (fecha != null) {
+            a.setFecha_nacimiento(fechaDate);
+        } else {
+            a.setFecha_nacimiento(Date.from(local.atStartOfDay().toInstant(ZoneOffset.UTC)));
+        }
+
+        if ("on".equals(mayor)) {
+            a.setMayor_edad(Boolean.TRUE);
+        } else {
+            a.setMayor_edad(Boolean.FALSE);
+        }
+        as.addAlumno(a);
+        a.setNombre("conseguido");
+        request.setAttribute("json", a);
     }
 
     /**
@@ -161,8 +172,7 @@ public class Alumnos extends HttpServlet
      * @return a String containing servlet description
      */
     @Override
-    public String getServletInfo()
-    {
+    public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
 
