@@ -20,10 +20,14 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import java.text.*;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletResponse;
 import model.Asignatura;
+import model.Asignatura;
+import model.ErrorHttp;
+import servicios.AsignaturasServicios;
 import servicios.AsignaturasServicios;
 
 /**
@@ -46,65 +50,56 @@ public class Asignaturas extends HttpServlet
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, ParseException
-    {
-
-        Asignatura a = new Asignatura();
+     @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        //Asignatura a = (Asignatura) request.getAttribute("asignatura");
         AsignaturasServicios as = new AsignaturasServicios();
-        String op = request.getParameter("op");
-        String id = request.getParameter("id");
-        String nombre = request.getParameter("nombre");
-        String curso = request.getParameter("curso");
-        String ciclo = request.getParameter("ciclo");
-        switch (op)
-        {
-            case "insert":
-                a.setNombre(nombre);
-                a.setCurso(curso);
-                a.setCiclo(ciclo);
-                as.addAsig(a);
-                break;
-            case "delete":
-                a.setId(Long.parseLong(id));
-                as.delAsig(a);
-                break;
-            case "update":
-                a.setId(Long.parseLong(id));
-                a.setNombre(nombre);
-                a.setCurso(curso);
-                a.setCiclo(ciclo);
-                as.updateAsig(a);
-                break;
-            default:
-                request.setAttribute("asignaturas", as.getAllAsignaturas());
-                request.getRequestDispatcher("pintarListaAsignaturas.jsp").forward(request, response);
+        List<Asignatura> asignaturas = new ArrayList<>();
+        asignaturas = as.getAllAsignaturas();
+        ErrorHttp error = null;
+        if(response.getStatus()==500){
+        error = new ErrorHttp("se rompio");}
 
-        }
-        request.setAttribute("asignaturas", as.getAllAsignaturas());
-        request.getRequestDispatcher("pintarListaAsignaturas.jsp").forward(request, response);
+        request.setAttribute("json", error);
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException
-    {
-        try
-        {
-            processRequest(request, response);
-        } catch (ParseException ex)
-        {
-            Logger.getLogger(Asignaturas.class.getName()).log(Level.SEVERE, null, ex);
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Asignatura a = (Asignatura) request.getAttribute("asignatura");
+        AsignaturasServicios as = new AsignaturasServicios();
+        String error=null;
+        int result = as.delAsig(a);
+        if(result == 0){
+            //no se ha añadido nunguna persona
         }
+        else if(result ==-1){
+            
+        }
+        // if (asignatura no se puede borrar)
+        
+        if(request.getAttribute("mensajeError")!=null){
+           // error=request.getAttribute("mensajeError");
+        }
+
+        request.setAttribute("json", error);
+
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Asignatura a = (Asignatura) request.getAttribute("asignatura");
+        AsignaturasServicios as = new AsignaturasServicios();
+        if(as.updateAsig(a)<1){
+            //error de algo o no se puede añadir algo
+        }
+        Scanner scanner = new Scanner(request.getInputStream(), "UTF-8");
+        String body = scanner.hasNext() ? scanner.useDelimiter("\\A").next() : "";
+       ErrorHttp error = null;
+        if(response.getStatus()==500){
+        error = new ErrorHttp("se rompio");}
+
+        request.setAttribute("json", error);
     }
 
     /**
@@ -117,15 +112,11 @@ public class Asignaturas extends HttpServlet
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException
-    {
-        try
-        {
-            processRequest(request, response);
-        } catch (ParseException ex)
-        {
-            Logger.getLogger(Asignaturas.class.getName()).log(Level.SEVERE, null, ex);
-        }
+            throws ServletException, IOException {
+        Asignatura a = (Asignatura) request.getAttribute("asignatura");
+        AsignaturasServicios as = new AsignaturasServicios();
+        as.addAsignatura(a);
+        request.setAttribute("json", a);
     }
 
     /**

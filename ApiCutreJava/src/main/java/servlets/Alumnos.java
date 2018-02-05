@@ -47,42 +47,29 @@ public class Alumnos extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Alumno a = (Alumno) request.getAttribute("alumno");
-        LocalDate local = LocalDate.of(1910, Month.MARCH, 12);
+        //Alumno a = (Alumno) request.getAttribute("alumno");
         AlumnosServicios as = new AlumnosServicios();
-        String op = request.getParameter("op");
-        String id = request.getParameter("id");
-        String nombre = request.getParameter("nombre");
-        String fecha = request.getParameter("fecha");
-        String mayor = request.getParameter("mayor");
-        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
         List<Alumno> alumnos = new ArrayList<>();
-        Alumno alumno = new Alumno();
-        alumno.setNombre("Juan");
-        alumnos.add(alumno);
-        alumno = new Alumno();
-        alumno.setNombre("KIKO");
-        alumnos.add(alumno);
-        request.setAttribute("json", alumnos);
+        alumnos = as.getAllAlumnos();
+        ErrorHttp error = null;
+        if(response.getStatus()==500){
+        error = new ErrorHttp("se rompio");}
+
+        request.setAttribute("json", error);
     }
 
     @Override
-    protected void doDelete(HttpServletRequest request, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Alumno a = (Alumno) request.getAttribute("alumno");
-        LocalDate local = LocalDate.of(1910, Month.MARCH, 12);
         AlumnosServicios as = new AlumnosServicios();
-        String op = request.getParameter("op");
         String id = request.getParameter("id");
-        String nombre = request.getParameter("nombre");
-        String fecha = request.getParameter("fecha");
-        String mayor = request.getParameter("mayor");
-        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
         a.setId(Long.parseLong(id));
         as.delAlumno(a);
         a.setNombre("DELETE");
         // if (alumno no se puede borrar)
-        resp.setStatus(500);
-        ErrorHttp error = new ErrorHttp("se rompio");
+         ErrorHttp error = null;
+        if(response.getStatus()==500){
+        error = new ErrorHttp("se rompio");}
 
         request.setAttribute("json", error);
 
@@ -91,35 +78,15 @@ public class Alumnos extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Alumno a = (Alumno) request.getAttribute("alumno");
-        LocalDate local = LocalDate.of(1910, Month.MARCH, 12);
         AlumnosServicios as = new AlumnosServicios();
-        String op = request.getParameter("op");
-        String id = request.getParameter("id");
-        String nombre = request.getParameter("nombre");
-        String fecha = request.getParameter("fecha");
-        String mayor = request.getParameter("mayor");
-        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
-        //
-        Date fechaDate= null;
-        try {
-            fechaDate = format.parse(fecha);
-        } catch (ParseException ex) {
-            Logger.getLogger(Alumnos.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        a.setId(Long.parseLong(id));
-        a.setNombre(nombre);
-        a.setFecha_nacimiento(fechaDate);
-        if ("on".equals(mayor)) {
-            a.setMayor_edad(Boolean.TRUE);
-        } else {
-            a.setMayor_edad(Boolean.FALSE);
-        }
         as.updateAlumno(a);
-        //
-        a.setNombre("PUT");
         Scanner scanner = new Scanner(request.getInputStream(), "UTF-8");
         String body = scanner.hasNext() ? scanner.useDelimiter("\\A").next() : "";
-        request.setAttribute("json", a);
+       ErrorHttp error = null;
+        if(response.getStatus()==500){
+        error = new ErrorHttp("se rompio");}
+
+        request.setAttribute("json", error);
     }
 
     /**
@@ -134,35 +101,8 @@ public class Alumnos extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         Alumno a = (Alumno) request.getAttribute("alumno");
-
-        LocalDate local = LocalDate.of(1910, Month.MARCH, 12);
         AlumnosServicios as = new AlumnosServicios();
-        String op = request.getParameter("op");
-        String id = request.getParameter("id");
-        String nombre = request.getParameter("nombre");
-        String fecha = request.getParameter("fecha");
-        String mayor = request.getParameter("mayor");
-        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
-        Date fechaDate=null;
-        try {
-            fechaDate = format.parse(fecha);
-        } catch (ParseException ex) {
-            Logger.getLogger(Alumnos.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        a.setNombre(nombre);
-        if (fecha != null) {
-            a.setFecha_nacimiento(fechaDate);
-        } else {
-            a.setFecha_nacimiento(Date.from(local.atStartOfDay().toInstant(ZoneOffset.UTC)));
-        }
-
-        if ("on".equals(mayor)) {
-            a.setMayor_edad(Boolean.TRUE);
-        } else {
-            a.setMayor_edad(Boolean.FALSE);
-        }
         as.addAlumno(a);
-        a.setNombre("conseguido");
         request.setAttribute("json", a);
     }
 

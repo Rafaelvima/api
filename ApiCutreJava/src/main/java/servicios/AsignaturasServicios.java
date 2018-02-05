@@ -30,18 +30,18 @@ public class AsignaturasServicios
         return dao.addAsig(asignaturaNuevo);
     }
 
-    public void delAsig(Asignatura asignaturaNuevo)
+    public int delAsig(Asignatura asignaturaNuevo)
     {
         AsignaturasDAO dao = new AsignaturasDAO();
 
-        dao.delAsig(asignaturaNuevo);
+        return dao.delAsig(asignaturaNuevo);
     }
 
-    public void updateAsig(Asignatura asignaturaNuevo)
+    public int updateAsig(Asignatura asignaturaNuevo)
     {
         AsignaturasDAO dao = new AsignaturasDAO();
 
-        dao.updateAsig(asignaturaNuevo);
+        return dao.updateAsig(asignaturaNuevo);
     }
 
 }

@@ -97,7 +97,7 @@ public class AlumnosDAO
     public Alumno insertAlumnoJDBC(Alumno a)
     {
         DBConnection db = new DBConnection();
-        Connection con = null;
+        Connection con = null; int filas =0;
         try
         {
             con = db.getConnection();
@@ -108,7 +108,7 @@ public class AlumnosDAO
             stmt.setDate(2, new java.sql.Date(a.getFecha_nacimiento().getTime()));
             stmt.setBoolean(3, a.getMayor_edad());
 
-            int filas = stmt.executeUpdate();
+             filas = stmt.executeUpdate();
 
             ResultSet rs = stmt.getGeneratedKeys();
             if (rs.next())
@@ -119,6 +119,7 @@ public class AlumnosDAO
         } catch (Exception ex)
         {
             Logger.getLogger(AlumnosDAO.class.getName()).log(Level.SEVERE, null, ex);
+            filas=-1;
         } finally
         {
             db.cerrarConexion(con);
@@ -127,55 +128,55 @@ public class AlumnosDAO
         return a;
     }
 
-    public void delUser(Alumno u)
+    public int delUser(Alumno u)
     {
         DBConnection db = new DBConnection();
         Connection con = null;
+        int filas=0;
         try
         {
             con = db.getConnection();
             QueryRunner qr = new QueryRunner();
 
-            int filas = qr.update(con,
+            filas = qr.update(con,
                     "DELETE FROM ALUMNOS WHERE ID=?",
                     u.getId());
 
         } catch (Exception ex)
         {
             Logger.getLogger(AlumnosDAO.class.getName()).log(Level.SEVERE, null, ex);
+            filas=-1;
         } finally
         {
             db.cerrarConexion(con);
         }
+        return filas;
     }
 
-    public void updateUser(Alumno u)
+    public int updateUser(Alumno u)
     {
         DBConnection db = new DBConnection();
         Connection con = null;
+        int filas=0;
         try
         {
             con = db.getConnection();
-            //QueryRunner qr = new QueryRunner();
+            QueryRunner qr = new QueryRunner();
 
-            /* int filas = qr.update(con,
+            filas = qr.update(con,
                     "UPDATE ALUMNOS SET NOMBRE=?,FECHA_NACIMIENTO=?"
                     + ", MAYOR_EDAD=? WHERE ID=?",
-                    u.getNombre(), "");*/
-            PreparedStatement stmt = con.prepareStatement("UPDATE ALUMNOS SET NOMBRE=?,FECHA_NACIMIENTO=?"
-                    + ", MAYOR_EDAD=? WHERE ID=?");
-            stmt.setString(1, u.getNombre());
-            stmt.setDate(2, new java.sql.Date(u.getFecha_nacimiento().getTime()));
-            stmt.setBoolean(3, u.getMayor_edad());
-            stmt.setLong(4, u.getId());
-            stmt.executeUpdate();
+                    u.getNombre(),new java.sql.Date(u.getFecha_nacimiento().getTime()),u.getMayor_edad(),u.getId());
+          
         } catch (Exception ex)
         {
             Logger.getLogger(AlumnosDAO.class.getName()).log(Level.SEVERE, null, ex);
+            filas=-1;
         } finally
         {
             db.cerrarConexion(con);
         }
+        return filas;
     }
 
 }

@@ -60,50 +60,56 @@ public class AsignaturasDAO
     }
     //DEL SI
 
-    public void delAsig(Asignatura u)
+    public int delAsig(Asignatura u)
     {
         DBConnection db = new DBConnection();
         Connection con = null;
+        int filas=0;
         try
         {
             con = db.getConnection();
             QueryRunner qr = new QueryRunner();
 
-            int filas = qr.update(con,
+             filas = qr.update(con,
                     "DELETE FROM ASIGNATURAS WHERE ID=?",
                     u.getId());
 
         } catch (Exception ex)
         {
             Logger.getLogger(AsignaturasDAO.class.getName()).log(Level.SEVERE, null, ex);
+            filas=-1;
         } finally
         {
             db.cerrarConexion(con);
         }
+        return filas;
     }
 
     //UPDATE SI
-    public void updateAsig(Asignatura u)
+    public int updateAsig(Asignatura u)
     {
         DBConnection db = new DBConnection();
         Connection con = null;
+        int filas =0;
         try
         {
             con = db.getConnection();
             QueryRunner qr = new QueryRunner();
 
-            int filas = qr.update(con,
+            filas = qr.update(con,
                     "UPDATE ASIGNATURAS SET NOMBRE=?,CURSO=?"
                     + ", CICLO=? WHERE ID=?",
                     u.getNombre(), u.getCurso(), u.getCiclo(), u.getId());
 
         } catch (Exception ex)
         {
+            filas=-1;
             Logger.getLogger(AsignaturasDAO.class.getName()).log(Level.SEVERE, null, ex);
         } finally
         {
             db.cerrarConexion(con);
         }
+        return filas;
     }
 
     // insert DBUTILS SI
