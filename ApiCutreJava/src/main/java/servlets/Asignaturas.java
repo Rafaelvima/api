@@ -115,7 +115,7 @@ public class Asignaturas extends HttpServlet
             throws ServletException, IOException {
         Asignatura a = (Asignatura) request.getAttribute("asignatura");
         AsignaturasServicios as = new AsignaturasServicios();
-        as.addAsignatura(a);
+        as.addAsig(a);
         request.setAttribute("json", a);
     }
 

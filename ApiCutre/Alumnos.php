@@ -22,6 +22,9 @@ if (isset($_REQUEST['op'])) {
 } else {
     $op = null;
 }
+if (!isset($mensaje)) {
+    $mensaje = null;
+}
 if (isset($_REQUEST['id'])) {
     $idalu = $_REQUEST['id'];
 } else {
@@ -61,7 +64,8 @@ switch ($op) {
                     'alumno' => json_encode($alumno)
                 ]
             ]);
-            //$alumno = json_decode($response->getBody());  
+            //todo ok hasta aqui y bajaria
+            $alumno = json_decode($response->getBody());  
             echo $alumno->id . " " . $alumno->nombre;
         } catch (RequestException $exception) {
 
@@ -78,7 +82,7 @@ switch ($op) {
                     'alumno' => json_encode($alumno)
                 ]
             ]);
-            //$alumno = json_decode($response->getBody());  
+            $alumno = json_decode($response->getBody());  
 //echo $alumno->id . " " . $alumno->nombre;
         } catch (RequestException $exception) {
 
@@ -86,6 +90,7 @@ switch ($op) {
             $error = json_decode($exception->getResponse()->getBody());
             echo $error->mensaje;
         }
+        
         break;
     case "update":
         $alumno->id = $idalu;
@@ -98,7 +103,7 @@ switch ($op) {
                     'alumno' => json_encode($alumno)
                 ]
             ]);
-            //$alumno = json_decode($response->getBody());  
+            $alumno = json_decode($response->getBody());  
 //echo $alumno->id . " " . $alumno->nombre;
         } catch (RequestException $exception) {
 
@@ -113,8 +118,12 @@ switch ($op) {
         try {
             $uri = 'http://localhost:8080/Apicutre/rest/cutre';
 //$header = array('headers' => array('X-Auth-Token' => '447878d6ad3e4da7bc65bac030cd061e'));
-            $response = $client->get($uri);
-            $alumno = json_decode($response->getBody());
+            $response=$client->post($uri, [
+                'form_params' => [
+                    'alumno' => json_encode($alumno)
+                ]
+            ]);
+            //si no da error lo de arriba haria esto ahora
             echo $alumno->id . " " . $alumno->nombre;
         } catch (RequestException $exception) {
 
