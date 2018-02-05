@@ -94,7 +94,7 @@ public class AlumnosDAO
 
     }
 
-    public Alumno insertAlumnoJDBC(Alumno a)
+    public int insertAlumnoJDBC(Alumno a)
     {
         DBConnection db = new DBConnection();
         Connection con = null; int filas =0;
@@ -125,7 +125,7 @@ public class AlumnosDAO
             db.cerrarConexion(con);
         }
 
-        return a;
+        return filas;
     }
 
     public int delUser(Alumno u)

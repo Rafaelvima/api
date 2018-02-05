@@ -113,18 +113,18 @@ public class AsignaturasDAO
     }
 
     // insert DBUTILS SI
-    public Asignatura addAsig(Asignatura u)
+    public int addAsig(Asignatura u)
     {
         DBConnection db = new DBConnection();
         Connection con = null;
-
+        Asignatura id=null;
         try
         {
             con = db.getConnection();
             con.setAutoCommit(false);
             QueryRunner qr = new QueryRunner();
             ResultSetHandler<Asignatura> h = new BeanHandler<>(Asignatura.class);
-            Asignatura id = qr.insert(con,
+          id = qr.insert(con,
                     "INSERT INTO ASIGNATURAS(ID,NOMBRE,CURSO,CICLO) VALUES(?,?,?,?)", h,
                     u.getId(), u.getNombre(), u.getCurso(), u.getCiclo());
             u.setId(id.getId());
@@ -137,7 +137,9 @@ public class AsignaturasDAO
         {
             db.cerrarConexion(con);
         }
-        return u;
+        if(id!=null)
+        return 1;
+        else return 0;
 
     }
     

@@ -23,7 +23,7 @@ public class AsignaturasServicios
         return dao.getAllAsignaturas();
     }
 
-    public Asignatura addAsig(Asignatura asignaturaNuevo)
+    public int addAsig(Asignatura asignaturaNuevo)
     {
         AsignaturasDAO dao = new AsignaturasDAO();
 

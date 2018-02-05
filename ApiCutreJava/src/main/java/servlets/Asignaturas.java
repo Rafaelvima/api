@@ -34,12 +34,11 @@ import servicios.AsignaturasServicios;
  *
  * @author oscar
  */
-@WebServlet(name = "Asignaturas", urlPatterns =
-{
-    "/asignaturas"
-})
-public class Asignaturas extends HttpServlet
-{
+@WebServlet(name = "Asignaturas", urlPatterns
+        = {
+            "/asignaturas"
+        })
+public class Asignaturas extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -50,7 +49,7 @@ public class Asignaturas extends HttpServlet
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-     @Override
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         //Asignatura a = (Asignatura) request.getAttribute("asignatura");
@@ -58,8 +57,9 @@ public class Asignaturas extends HttpServlet
         List<Asignatura> asignaturas = new ArrayList<>();
         asignaturas = as.getAllAsignaturas();
         ErrorHttp error = null;
-        if(response.getStatus()==500){
-        error = new ErrorHttp("se rompio");}
+        if (response.getStatus() == 500) {
+            error = new ErrorHttp("se rompio");
+        }
 
         request.setAttribute("json", error);
     }
@@ -68,38 +68,19 @@ public class Asignaturas extends HttpServlet
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Asignatura a = (Asignatura) request.getAttribute("asignatura");
         AsignaturasServicios as = new AsignaturasServicios();
-        String error=null;
-        int result = as.delAsig(a);
-        if(result == 0){
-            //no se ha añadido nunguna persona
+        if (as.delAsig(a) > 0) {
+            request.setAttribute("json", a);
         }
-        else if(result ==-1){
-            
-        }
-        // if (asignatura no se puede borrar)
-        
-        if(request.getAttribute("mensajeError")!=null){
-           // error=request.getAttribute("mensajeError");
-        }
-
-        request.setAttribute("json", error);
-
     }
 
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Asignatura a = (Asignatura) request.getAttribute("asignatura");
         AsignaturasServicios as = new AsignaturasServicios();
-        if(as.updateAsig(a)<1){
-            //error de algo o no se puede añadir algo
+        if (as.updateAsig(a) > 0) //coorecto
+        {
+            request.setAttribute("json", a);
         }
-        Scanner scanner = new Scanner(request.getInputStream(), "UTF-8");
-        String body = scanner.hasNext() ? scanner.useDelimiter("\\A").next() : "";
-       ErrorHttp error = null;
-        if(response.getStatus()==500){
-        error = new ErrorHttp("se rompio");}
-
-        request.setAttribute("json", error);
     }
 
     /**
@@ -115,8 +96,9 @@ public class Asignaturas extends HttpServlet
             throws ServletException, IOException {
         Asignatura a = (Asignatura) request.getAttribute("asignatura");
         AsignaturasServicios as = new AsignaturasServicios();
-        as.addAsig(a);
-        request.setAttribute("json", a);
+        if (as.addAsig(a) > 0) {
+            request.setAttribute("json", a);
+        }
     }
 
     /**
@@ -125,8 +107,7 @@ public class Asignaturas extends HttpServlet
      * @return a String containing servlet description
      */
     @Override
-    public String getServletInfo()
-    {
+    public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
 
