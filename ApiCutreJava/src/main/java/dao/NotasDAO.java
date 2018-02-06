@@ -25,17 +25,18 @@ public class NotasDAO
 {
 
     //Select DBUtils
-    public List<Nota> getAllNotas()
+   
+    public Nota getAllNota(Nota n)
     {
-        List<Nota> lista = null;
+        Nota lista = null;
         DBConnection db = new DBConnection();
         Connection con = null;
         try
         {
             con = db.getConnection();
             QueryRunner qr = new QueryRunner();
-            ResultSetHandler<List<Nota>> h = new BeanListHandler<Nota>(Nota.class);
-            lista = qr.query(con, "select * FROM NOTAS", h);
+             ResultSetHandler<Nota> h = new BeanHandler<>(Nota.class);
+            lista = qr.query(con, "select * FROM NOTAS WHERE ID_ASIGNATURA=? AND ID_ALUMNO=?",h,n.getId_asignatura(),n.getId_alumno());
 
         } catch (Exception ex)
         {
@@ -48,16 +49,17 @@ public class NotasDAO
     }
 
     //UPDATE SI
-    public void updateNota(Nota u)
+    public int updateNota(Nota u)
     {
         DBConnection db = new DBConnection();
         Connection con = null;
+        int filas =0;
         try
         {
             con = db.getConnection();
             QueryRunner qr = new QueryRunner();
 
-            int filas = qr.update(con,
+             filas = qr.update(con,
                     "UPDATE NOTAS SET NOTA=?"
                     + " WHERE ID_ALUMNO=? AND ID_ASIGNATURA=?",
                     u.getNota(), u.getId_alumno(), u.getId_asignatura());
@@ -73,21 +75,22 @@ public class NotasDAO
         {
             db.cerrarConexion(con);
         }
+        return filas;
     }
 
     // insert DBUTILS SI
-    public Nota addNota(Nota u) throws SQLException
+    public Nota addNota(Nota u)
     {
         DBConnection db = new DBConnection();
         Connection con = null;
-
+        Nota filas=null; 
         try
         {
             con = db.getConnection();
             con.setAutoCommit(false);
             QueryRunner qr = new QueryRunner();
             ResultSetHandler<Nota> h = new BeanHandler<>(Nota.class);
-            qr.insert(con, "INSERT INTO NOTAS(ID_ALUMNO,ID_ASIGNATURA,NOTA) VALUES(?,?,?)", h,
+            filas=qr.insert(con, "INSERT INTO NOTAS(ID_ALUMNO,ID_ASIGNATURA,NOTA) VALUES(?,?,?)", h,
                     u.getId_alumno(), u.getId_asignatura(), u.getNota());
             con.commit();
 
@@ -99,16 +102,16 @@ public class NotasDAO
         {
             db.cerrarConexion(con);
         }
-        return u;
+        return filas;
 
     }
     //DEL SI
 
-    public void delNota(Nota u)
+    public int delNota(Nota u)
     {
         DBConnection db = new DBConnection();
         Connection con = null;
-        int filas;
+        int filas=0;
         try
         {
             con = db.getConnection();
@@ -128,6 +131,7 @@ public class NotasDAO
         {
             db.cerrarConexion(con);
         }
+        return filas;
     }
 
 }

@@ -51,12 +51,9 @@ public class Alumnos extends HttpServlet {
         AlumnosServicios as = new AlumnosServicios();
         List<Alumno> alumnos = new ArrayList<>();
         alumnos = as.getAllAlumnos();
-        ErrorHttp error = null;
-        if (response.getStatus() == 500) {
-            error = new ErrorHttp("se rompio");
+        if (alumnos != null) {
+            request.setAttribute("json", alumnos);
         }
-
-        request.setAttribute("json", error);
     }
 
     @Override
@@ -64,10 +61,7 @@ public class Alumnos extends HttpServlet {
         Alumno a = (Alumno) request.getAttribute("alumno");
         AlumnosServicios as = new AlumnosServicios();
 
-        if (as.delAlumno(a) > 0) // if (alumno no se puede borrar)
-        //         ErrorHttp error = null;
-        //        if(response.getStatus()==500){
-        //        error = new ErrorHttp("se rompio");}
+        if (as.delAlumno(a) > 0) 
         {
             request.setAttribute("json", a);
         }
@@ -78,7 +72,8 @@ public class Alumnos extends HttpServlet {
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Alumno a = (Alumno) request.getAttribute("alumno");
         AlumnosServicios as = new AlumnosServicios();
-        if (as.updateAlumno(a) > 0) //       ErrorHttp error = null;
+        if (as.updateAlumno(a) > 0) 
+        //       ErrorHttp error = null;
         //        if(response.getStatus()==500){
         //        error = new ErrorHttp("se rompio");}
         {

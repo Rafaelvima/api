@@ -17,31 +17,31 @@ import model.Nota;
 public class NotasServicios
 {
 
-    public List<Nota> getAllNotas()
+    public Nota getAllNota(Nota n)
     {
         NotasDAO dao = new NotasDAO();
 
-        return dao.getAllNotas();
+        return dao.getAllNota(n);
     }
 
-    public Nota addNota(Nota notaNuevo) throws SQLException
+    public Nota addNota(Nota notaNuevo)
     {
         NotasDAO dao = new NotasDAO();
 
         return dao.addNota(notaNuevo);
     }
 
-    public void delNota(Nota notaNuevo)
+    public int delNota(Nota notaNuevo)
     {
         NotasDAO dao = new NotasDAO();
 
-        dao.delNota(notaNuevo);
+        return dao.delNota(notaNuevo);
     }
 
-    public void updateNota(Nota notaNuevo)
+    public int updateNota(Nota notaNuevo)
     {
         NotasDAO dao = new NotasDAO();
 
-        dao.updateNota(notaNuevo);
+        return dao.updateNota(notaNuevo);
     }
 }

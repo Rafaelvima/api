@@ -28,16 +28,13 @@ import javax.servlet.http.HttpServletResponse;
 import model.*;
 import servicios.NotasServicios;
 import servicios.AlumnosServicios;
-import servicios.AsignaturasServicios;
+import servicios.NotasServicios;
 
 /**
  *
  * @author oscar
  */
-@WebServlet(name = "Notas", urlPatterns =
-{
-    "/notas"
-})
+@WebServlet(name = "Notas", urlPatterns ={"/notas"})
 public class Notas extends HttpServlet
 {
 
@@ -50,83 +47,36 @@ public class Notas extends HttpServlet
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, ParseException, SQLException
-    {
-
-        Nota a = new Nota();
-        Alumno alu = new Alumno();
-        Asignatura asi = new Asignatura();
-        NotasServicios ns = new NotasServicios();
-        AsignaturasServicios ass = new AsignaturasServicios();
-        AlumnosServicios als = new AlumnosServicios();
-
-        String op = request.getParameter("op");
-        String id_alumno = request.getParameter("id_alumno");
-        String id_asignatura = request.getParameter("id_asignatura");
-        String nota = request.getParameter("nota");
-        switch (op)
-        {
-            case "insert":
-                a.setId_alumno(Long.parseLong(id_alumno));
-                a.setId_asignatura(Long.parseLong(id_asignatura));
-                a.setNota(Integer.parseInt(nota));
-                ns.addNota(a);
-                break;
-            case "delete":
-
-                a.setId_alumno(Long.parseLong(id_alumno));
-                a.setId_asignatura(Long.parseLong(id_asignatura));
-                ns.delNota(a);
-
-                break;
-            case "deleteAll":
-                alu.setId(Long.parseLong(id_alumno));
-                als.delAlumno(alu);
-                asi.setId(Long.parseLong(id_asignatura));
-                ass.delAsig(asi);
-                break;
-            case "update":
-                a.setId_alumno(Long.parseLong(id_alumno));
-                a.setId_asignatura(Long.parseLong(id_asignatura));
-                a.setNota(Integer.parseInt(nota));
-                ns.updateNota(a);
-                break;
-            default:
-                request.setAttribute("alumnos", als.getAllAlumnos());
-                request.setAttribute("asignaturas", ass.getAllAsignaturas());
-                request.setAttribute("notas", ns.getAllNotas());
-                request.getRequestDispatcher("pintarListaNotas.jsp").forward(request, response);
-
-        }
-        request.setAttribute("alumnos", als.getAllAlumnos());
-        request.setAttribute("asignaturas", ass.getAllAsignaturas());
-        request.setAttribute("notas", ns.getAllNotas());
-        request.getRequestDispatcher("pintarListaNotas.jsp").forward(request, response);
-    }
-
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException
-    {
-        try
+            throws ServletException, IOException {
+        Nota a = (Nota) request.getAttribute("nota");
+        NotasServicios ns = new NotasServicios();
+        
+     
+        if (ns.getAllNota(a) !=null) {
+          
+        }
+
+        request.setAttribute("json", a);
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Nota a = (Nota) request.getAttribute("nota");
+        NotasServicios ns = new NotasServicios();
+        if (ns.delNota(a) > 0) {
+            request.setAttribute("json", a);
+        }
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Nota a = (Nota) request.getAttribute("nota");
+        NotasServicios ns = new NotasServicios();
+        if ( ns.updateNota(a) > 0) //coorecto
         {
-            processRequest(request, response);
-        } catch (ParseException ex)
-        {
-            Logger.getLogger(Notas.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex)
-        {
-            Logger.getLogger(Notas.class.getName()).log(Level.SEVERE, null, ex);
+            request.setAttribute("json", a);
         }
     }
 
@@ -140,17 +90,11 @@ public class Notas extends HttpServlet
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException
-    {
-        try
-        {
-            processRequest(request, response);
-        } catch (ParseException ex)
-        {
-            Logger.getLogger(Notas.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex)
-        {
-            Logger.getLogger(Notas.class.getName()).log(Level.SEVERE, null, ex);
+            throws ServletException, IOException {
+        Nota a = (Nota) request.getAttribute("nota");
+        NotasServicios ns = new NotasServicios();
+        if (  ns.addNota(a)!=null) {
+            request.setAttribute("json", a);
         }
     }
 
