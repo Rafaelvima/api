@@ -7,12 +7,15 @@ and open the template in the editor.
 
 <?php
 require 'vendor/autoload.php';
-
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\RequestException;
 
 $client = new Client();
+//$header = array('headers' => array('X-Auth-Token' => '447878d6ad3e4da7bc65bac030cd061e'));
 
-$uri = 'http://localhost:8080/Apicutre/rest/cutre';
+
+$uri = 'http://localhost:8083/ApiCutreJava/rest/alumnos';
 
 // Create connection
 // Check connection
@@ -25,6 +28,7 @@ if (isset($_REQUEST['op'])) {
 if (!isset($mensaje)) {
     $mensaje = null;
 }
+
 if (isset($_REQUEST['id'])) {
     $idalu = $_REQUEST['id'];
 } else {
@@ -56,8 +60,8 @@ switch ($op) {
     case "insert":
         $alumno->id = $idalu;
         $alumno->nombre = $nombrealu;
-        $alumno->fecha = $fechaalu;
-        $alumno->mayor = $mayoralu;
+        $alumno->fecha_nacimiento = $fechaalu;
+        $alumno->mayor_edad = $mayoralu;
         try {
             $response = $client->put($uri, [
                 'query' => [
@@ -66,7 +70,7 @@ switch ($op) {
             ]);
             //todo ok hasta aqui y bajaria
             $alumno = json_decode($response->getBody());  
-            echo $alumno->id . " " . $alumno->nombre;
+            echo $alumno->id . " " . $alumno->nombre." alumno insertado correctamente";
         } catch (RequestException $exception) {
 
             echo $exception->getCode();
@@ -83,7 +87,7 @@ switch ($op) {
                 ]
             ]);
             $alumno = json_decode($response->getBody());  
-//echo $alumno->id . " " . $alumno->nombre;
+echo "Alumno " . $alumno->nombre . " borrado correctamente";
         } catch (RequestException $exception) {
 
             echo $exception->getCode();
@@ -95,8 +99,8 @@ switch ($op) {
     case "update":
         $alumno->id = $idalu;
         $alumno->nombre = $nombrealu;
-        $alumno->fecha = $fechaalu;
-        $alumno->mayor = $mayoralu;
+        $alumno->fecha_nacimiento = $fechaalu;
+        $alumno->mayor_edad = $mayoralu;
         try {
             $response = $client->post($uri, [
                 'form_params' => [
@@ -104,7 +108,7 @@ switch ($op) {
                 ]
             ]);
             $alumno = json_decode($response->getBody());  
-//echo $alumno->id . " " . $alumno->nombre;
+echo "Alumno " . $alumno->nombre . " modificado correctamente";
         } catch (RequestException $exception) {
 
             echo $exception->getCode();
@@ -116,29 +120,15 @@ switch ($op) {
         echo "<br>" . "GET" . "<br>";
 
         try {
-            $uri = 'http://localhost:8080/Apicutre/rest/cutre';
-//$header = array('headers' => array('X-Auth-Token' => '447878d6ad3e4da7bc65bac030cd061e'));
-            $response=$client->post($uri, [
-                'form_params' => [
-                    'alumno' => json_encode($alumno)
-                ]
-            ]);
-            //si no da error lo de arriba haria esto ahora
-            echo $alumno->id . " " . $alumno->nombre;
-        } catch (RequestException $exception) {
+            $response = $client->get($uri);
 
-            echo $exception->getCode();
-            $error = json_decode($exception->getResponse()->getBody());
-            echo $error->mensaje;
-        }
+$alumnos = json_decode($response->getBody());
+
+foreach ($alumnos as $alumno) {
+    echo $alumno->id . " " . $alumno->nombre . "<br>";
 }
-
-//insertar
-?>
-
-
-
-<html>
+?> 
+    <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
@@ -159,21 +149,21 @@ switch ($op) {
 foreach ($alumnos as $alumno) {
     ?>
                 <tr>
-                    <td><input type="button" value="cargar <?php echo $alumno['ID'] ?>" 
-                               onclick="cargarAlumno('<?php echo $alumno['ID'] ?>',
-                                                   '<?php echo $alumno['NOMBRE'] ?>',
-                                                   ' <?php echo $alumno['FECHA_NACIMIENTO'] ?>',
-                                                   '<?php if ($alumno['MAYOR_EDAD'] == 1) echo 'checked' ?>')"/>
+                    <td><input type="button" value="cargar <?php echo $alumno->id ?>" 
+                               onclick="cargarAlumno('<?php echo $alumno->id ?>',
+                                                   '<?php echo $alumno->nombre ?>',
+                                                   ' <?php echo $alumno->fecha_nacimiento ?>',
+                                                   '<?php if ($alumno->mayor_edad == 1) echo 'checked' ?>')"/>
                     </td>
                     <td>
-                               <?php echo $alumno['NOMBRE']; ?>
+                               <?php echo $alumno->nombre; ?>
                     </td>
 
                     <td>
-    <?php echo $alumno['FECHA_NACIMIENTO']; ?>
+    <?php echo $alumno->fecha_nacimiento; ?>
                     </td>
                     <td>
-                        <?php ?><input type="checkbox"  <?php if ($alumno['MAYOR_EDAD'] == 1) echo 'checked' ?>/> 
+                        <?php ?><input type="checkbox"  <?php if ($alumno->mayor_edad == 1) echo 'checked' ?>/> 
                     </td>
                 </tr>
 
@@ -195,3 +185,13 @@ echo "FIN";
         </form>
     </body>
 </html>
+
+    <?php
+        } catch (RequestException $exception) {
+
+            echo $exception->getCode();
+            $error = json_decode($exception->getResponse()->getBody());
+            echo $error->mensaje;
+        }
+}
+?>

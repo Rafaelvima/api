@@ -36,7 +36,7 @@ import servicios.AsignaturasServicios;
  */
 @WebServlet(name = "Asignaturas", urlPatterns
         = {
-            "/asignaturas"
+            "/rest/asignaturas"
         })
 public class Asignaturas extends HttpServlet {
 

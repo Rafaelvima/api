@@ -36,62 +36,25 @@ import org.springframework.jdbc.core.JdbcTemplate;
 public class AlumnosDAO
 {
 //Select JDBC
-    public List<Alumno> getAllAlumnosJDBC()
-    {
-        List<Alumno> lista = new ArrayList<>();
-        Alumno nuevo = null;
-        DBConnection db = new DBConnection();
+    public List<Alumno> getAllAlumnos() {
+        List<Alumno> lista = null;
+       DBConnection db = new DBConnection();
         Connection con = null;
-        Statement stmt = null;
-        ResultSet rs = null;
-        try
-        {
+        try {
             con = db.getConnection();
-            stmt = con.createStatement();
-            String sql;
-            sql = "SELECT * FROM ALUMNOS";
-            rs = stmt.executeQuery(sql);
 
-            //STEP 5: Extract data from result set
-            while (rs.next())
-            {
-                //Retrieve by column name
-                int id = rs.getInt("id");
-                String nombre = rs.getString("nombre");
-                Date fn = rs.getDate("fecha_nacimiento");
-                Boolean mayor = rs.getBoolean("mayor_edad");
-                nuevo = new Alumno();
-                nuevo.setFecha_nacimiento(fn);
-                nuevo.setId(id);
-                nuevo.setMayor_edad(mayor);
-                nuevo.setNombre(nombre);
-                lista.add(nuevo);
-            }
+            QueryRunner qr = new QueryRunner();
+            ResultSetHandler<List<Alumno>> handler
+              = new BeanListHandler<Alumno>(Alumno.class);
+            lista = qr.query(con, "select * FROM alumnos", handler);
 
-        } catch (Exception ex)
-        {
+        } catch (Exception ex) {
             Logger.getLogger(AlumnosDAO.class.getName()).log(Level.SEVERE, null, ex);
-        } finally
-        {
-            try
-            {
-                if (rs != null)
-                {
-                    rs.close();
-                }
-                if (stmt != null)
-                {
-                    stmt.close();
-                }
-            } catch (SQLException ex)
-            {
-                Logger.getLogger(AlumnosDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-            db.cerrarConexion(con);
+        } finally {
+            
+           db.cerrarConexion(con);
         }
         return lista;
-
     }
 
     public int insertAlumnoJDBC(Alumno a)
@@ -101,7 +64,7 @@ public class AlumnosDAO
         try
         {
             con = db.getConnection();
-            PreparedStatement stmt = con.prepareStatement("INSERT INTO ALUMNOS (NOMBRE,FECHA_NACIMIENTO,"
+            PreparedStatement stmt = con.prepareStatement("INSERT INTO alumnos (NOMBRE,FECHA_NACIMIENTO,"
                     + "MAYOR_EDAD) VALUES(?,?,?)", Statement.RETURN_GENERATED_KEYS);
 
             stmt.setString(1, a.getNombre());
@@ -139,7 +102,7 @@ public class AlumnosDAO
             QueryRunner qr = new QueryRunner();
 
             filas = qr.update(con,
-                    "DELETE FROM ALUMNOS WHERE ID=?",
+                    "DELETE FROM alumnos WHERE ID=?",
                     u.getId());
 
         } catch (Exception ex)
@@ -164,7 +127,7 @@ public class AlumnosDAO
             QueryRunner qr = new QueryRunner();
 
             filas = qr.update(con,
-                    "UPDATE ALUMNOS SET NOMBRE=?,FECHA_NACIMIENTO=?"
+                    "UPDATE alumnos SET NOMBRE=?,FECHA_NACIMIENTO=?"
                     + ", MAYOR_EDAD=? WHERE ID=?",
                     u.getNombre(),new java.sql.Date(u.getFecha_nacimiento().getTime()),u.getMayor_edad(),u.getId());
           

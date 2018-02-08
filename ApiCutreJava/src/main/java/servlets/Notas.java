@@ -34,7 +34,7 @@ import servicios.NotasServicios;
  *
  * @author oscar
  */
-@WebServlet(name = "Notas", urlPatterns ={"/notas"})
+@WebServlet(name = "Notas", urlPatterns ={"/rest/notas"})
 public class Notas extends HttpServlet
 {
 
@@ -55,10 +55,10 @@ public class Notas extends HttpServlet
         
      
         if (ns.getAllNota(a) !=null) {
-          
+          request.setAttribute("json", a);
         }
 
-        request.setAttribute("json", a);
+        
     }
 
     @Override

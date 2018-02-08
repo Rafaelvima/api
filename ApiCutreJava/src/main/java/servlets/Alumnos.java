@@ -32,7 +32,7 @@ import servicios.AlumnosServicios;
  *
  * @author oscar
  */
-@WebServlet(name = "Alumnos", urlPatterns = {"/alumnos"})
+@WebServlet(name = "Alumnos", urlPatterns = {"/rest/alumnos"})
 public class Alumnos extends HttpServlet {
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -50,10 +50,17 @@ public class Alumnos extends HttpServlet {
         //Alumno a = (Alumno) request.getAttribute("alumno");
         AlumnosServicios as = new AlumnosServicios();
         List<Alumno> alumnos = new ArrayList<>();
-        alumnos = as.getAllAlumnos();
-        if (alumnos != null) {
-            request.setAttribute("json", alumnos);
-        }
+        alumnos = as.getAllAlumnos();/*
+        List<Alumno> alumnos = new ArrayList<>();
+        Alumno alumno = new Alumno();
+        alumno.setNombre("Juan");
+        alumnos.add(alumno);
+        alumno = new Alumno();
+        alumno.setNombre("KIKO");
+        alumnos.add(alumno);*/
+        request.setAttribute("json", alumnos);
+            
+        
     }
 
     @Override
@@ -81,7 +88,7 @@ public class Alumnos extends HttpServlet {
         }
     }
 
-    /**
+    /*
      * Handles the HTTP <code>POST</code> method.
      *
      * @param request servlet request

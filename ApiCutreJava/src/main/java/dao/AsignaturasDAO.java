@@ -47,7 +47,7 @@ public class AsignaturasDAO
             con = db.getConnection();
             QueryRunner qr = new QueryRunner();
             ResultSetHandler<List<Asignatura>> h = new BeanListHandler<Asignatura>(Asignatura.class);
-            lista = qr.query(con, "select * FROM ASIGNATURAS", h);
+            lista = qr.query(con, "SELECT * FROM asignaturas", h);
 
         } catch (Exception ex)
         {
@@ -71,7 +71,7 @@ public class AsignaturasDAO
             QueryRunner qr = new QueryRunner();
 
              filas = qr.update(con,
-                    "DELETE FROM ASIGNATURAS WHERE ID=?",
+                    "DELETE FROM asignaturas WHERE id=?",
                     u.getId());
 
         } catch (Exception ex)
