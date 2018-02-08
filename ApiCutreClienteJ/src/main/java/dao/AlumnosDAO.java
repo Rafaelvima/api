@@ -5,6 +5,7 @@
  */
 package dao;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import model.Alumno;
@@ -128,47 +129,24 @@ public class AlumnosDAO {
         return json;
     }
 
-    public void delUser(Alumno u) {
-        DBConnection db = new DBConnection();
-        Connection con = null;
-        try {
-            con = db.getConnection();
-            QueryRunner qr = new QueryRunner();
+    public void delUser(Alumno a) throws IOException {
+         ObjectMapper m = new ObjectMapper();
+        url.set("alumno", m.writeValueAsString(a));
+        HttpRequest requestGoogle = requestFactory.buildPutRequest(url, new JsonHttpContent(new JacksonFactory(), a));
+        //    requestGoogle.getHeaders().set("X-Auth-Token", "2deee83e549c4a6e9709871d0fd58a0a");
 
-            int filas = qr.update(con,
-                    "DELETE FROM ALUMNOS WHERE ID=?",
-                    u.getId());
-
-        } catch (Exception ex) {
-            Logger.getLogger(AlumnosDAO.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            db.cerrarConexion(con);
-        }
+        Alumno json = requestGoogle.execute().parseAs(Alumno.class);
+        
     }
 
-    public void updateUser(Alumno u) {
-        DBConnection db = new DBConnection();
-        Connection con = null;
-        try {
-            con = db.getConnection();
-            //QueryRunner qr = new QueryRunner();
+    public void updateUser(Alumno a) throws IOException {
+         ObjectMapper m = new ObjectMapper();
+        url.set("alumno", m.writeValueAsString(a));
+        HttpRequest requestGoogle = requestFactory.buildPutRequest(url, new JsonHttpContent(new JacksonFactory(), a));
+        //    requestGoogle.getHeaders().set("X-Auth-Token", "2deee83e549c4a6e9709871d0fd58a0a");
 
-            /* int filas = qr.update(con,
-                    "UPDATE ALUMNOS SET NOMBRE=?,FECHA_NACIMIENTO=?"
-                    + ", MAYOR_EDAD=? WHERE ID=?",
-                    u.getNombre(), "");*/
-            PreparedStatement stmt = con.prepareStatement("UPDATE ALUMNOS SET NOMBRE=?,FECHA_NACIMIENTO=?"
-                    + ", MAYOR_EDAD=? WHERE ID=?");
-            stmt.setString(1, u.getNombre());
-            stmt.setDate(2, new java.sql.Date(u.getFecha_nacimiento().getTime()));
-            stmt.setBoolean(3, u.getMayor_edad());
-            stmt.setLong(4, u.getId());
-            stmt.executeUpdate();
-        } catch (Exception ex) {
-            Logger.getLogger(AlumnosDAO.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            db.cerrarConexion(con);
-        }
+        Alumno json = requestGoogle.execute().parseAs(Alumno.class);
+        
     }
 
 }
