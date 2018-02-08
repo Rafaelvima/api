@@ -49,6 +49,7 @@ public class FilterJson implements Filter {
         ObjectMapper mapper = new ObjectMapper();
         ((HttpServletRequest)request).getMethod();
         
+        
         String alumno = request.getParameter("alumno");
         if (alumno != null) {
             Alumno a = mapper.readValue(alumno, new TypeReference<Alumno>() {

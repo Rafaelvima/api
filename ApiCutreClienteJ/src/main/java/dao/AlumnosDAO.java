@@ -5,6 +5,7 @@
  */
 package dao;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import model.Alumno;
 import java.math.BigInteger;
@@ -78,50 +79,59 @@ import org.springframework.jdbc.core.JdbcTemplate;
  *
  * @author Rafa
  */
-public class AlumnosDAO
-{
+public class AlumnosDAO {
 //Select JDBC
-    JsonFactory JSON_FACTORY = new JacksonFactory();
-     HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
-         HttpRequestFactory requestFactory = HTTP_TRANSPORT.createRequestFactory(new HttpRequestInitializer() {
-            @Override
-            public void initialize(HttpRequest request) {
-                request.setParser(new JsonObjectParser(JSON_FACTORY));
-                
-            }
-        });
-        GenericUrl url = new GenericUrl("http://api.football-data.org/v1/competitions/"); 
-        ObjectMapper objectMapper = new ObjectMapper();
 
-    public List<Alumno> getAllAlumnosJDBC() throws IOException
-    {
-       
-             HttpRequest requestGoogle = requestFactory.buildGetRequest(url);
-        
-        List<Alumno> lista = objectMapper.readValue(requestGoogle.execute().parseAsString(),
-                objectMapper.getTypeFactory().constructCollectionType(List.class,Alumno.class ));
-               return lista;
-     //    List<GenericJson> json = (List) requestGoogle.execute().parseAs(type);
-      // HttpRequest requestGoogle = requestFactory.buildPostRequest(url, new UrlEncodedContent(data));
+    JsonFactory JSON_FACTORY = new JacksonFactory();
+    HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
+    HttpRequestFactory requestFactory = HTTP_TRANSPORT.createRequestFactory(new HttpRequestInitializer() {
+        @Override
+        public void initialize(HttpRequest request) {
+            request.setParser(new JsonObjectParser(JSON_FACTORY));
+
+        }
+    });
+    GenericUrl url = new GenericUrl("http://localhost:8083/ApiCutreJava/rest/alumnos");
+    ObjectMapper objectMapper = new ObjectMapper();
+
+    public List<Alumno> getAllAlumnosJDBC() throws IOException {
+
+        HttpRequest requestGoogle = requestFactory.buildGetRequest(url);
+ //HttpRequest requestGoogle = requestFactory.buildPutRequest(url, new JsonHttpContent(new JacksonFactory(), a));
+        //    requestGoogle.getHeaders().set("X-Auth-Token", "2deee83e549c4a6e9709871d0fd58a0a");
+
+        List<Alumno> json = (List) requestGoogle.execute().parseAs(Alumno.class);
+//        List<Alumno> lista = objectMapper.readValue(requestGoogle.execute().parseAsString(),
+//                objectMapper.getTypeFactory().constructCollectionType(List.class, Alumno.class));
+        return json;
+        //    List<GenericJson> json = (List) requestGoogle.execute().parseAs(type);
+        // HttpRequest requestGoogle = requestFactory.buildPostRequest(url, new UrlEncodedContent(data));
         //requestGoogle.getHeaders().set("X-Auth-Token", "2deee83e549c4a6e9709871d0fd58a0a");
 
     }
 
-    public Alumno insertAlumnoJDBC(Alumno a) throws IOException
-    {
-         HttpRequest requestGoogle = requestFactory.buildPostRequest(url,  new JsonHttpContent(new JacksonFactory(), a));
-        Alumno lista = requestGoogle.execute().parseAs(Alumno.class);
-//       Alumno lista = objectMapper.readValue(requestGoogle.execute().parseAsString(),
-//                objectMapper.getTypeFactory().constructCollectionType(List.class,Alumno.class ));
-               return lista;
+    public Alumno insertAlumnoJDBC(Alumno a) throws IOException {
+
+        ObjectMapper m = new ObjectMapper();
+        url.set("alumno", m.writeValueAsString(a));
+        HttpRequest requestGoogle = requestFactory.buildPutRequest(url, new JsonHttpContent(new JacksonFactory(), a));
+        //    requestGoogle.getHeaders().set("X-Auth-Token", "2deee83e549c4a6e9709871d0fd58a0a");
+
+        Alumno json = requestGoogle.execute().parseAs(Alumno.class);
+//        response.getWriter().print(json.getNombre());
+
+//        url.set("alumno",objectMapper.writeValueAsString(a));
+//         HttpRequest requestGoogle = requestFactory.buildPostRequest(url,  new JsonHttpContent(new JacksonFactory(), a));
+        //Alumno lista = requestGoogle.execute().parseAs(Alumno.class);
+        //request.setHeader("api",uagwbgdkah)
+        //    Alumno lista = objectMapper.readValue(requestGoogle.execute().parseAsString(),Alumno.class );
+        return json;
     }
 
-    public void delUser(Alumno u)
-    {
+    public void delUser(Alumno u) {
         DBConnection db = new DBConnection();
         Connection con = null;
-        try
-        {
+        try {
             con = db.getConnection();
             QueryRunner qr = new QueryRunner();
 
@@ -129,21 +139,17 @@ public class AlumnosDAO
                     "DELETE FROM ALUMNOS WHERE ID=?",
                     u.getId());
 
-        } catch (Exception ex)
-        {
+        } catch (Exception ex) {
             Logger.getLogger(AlumnosDAO.class.getName()).log(Level.SEVERE, null, ex);
-        } finally
-        {
+        } finally {
             db.cerrarConexion(con);
         }
     }
 
-    public void updateUser(Alumno u)
-    {
+    public void updateUser(Alumno u) {
         DBConnection db = new DBConnection();
         Connection con = null;
-        try
-        {
+        try {
             con = db.getConnection();
             //QueryRunner qr = new QueryRunner();
 
@@ -158,11 +164,9 @@ public class AlumnosDAO
             stmt.setBoolean(3, u.getMayor_edad());
             stmt.setLong(4, u.getId());
             stmt.executeUpdate();
-        } catch (Exception ex)
-        {
+        } catch (Exception ex) {
             Logger.getLogger(AlumnosDAO.class.getName()).log(Level.SEVERE, null, ex);
-        } finally
-        {
+        } finally {
             db.cerrarConexion(con);
         }
     }
