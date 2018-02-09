@@ -129,23 +129,27 @@ public class AlumnosDAO {
         return json;
     }
 
-    public void delUser(Alumno a) throws IOException {
+    public int delUser(Alumno a) throws IOException {
          ObjectMapper m = new ObjectMapper();
         url.set("alumno", m.writeValueAsString(a));
-        HttpRequest requestGoogle = requestFactory.buildPutRequest(url, new JsonHttpContent(new JacksonFactory(), a));
+        HttpRequest requestGoogle = requestFactory.buildDeleteRequest(url);
         //    requestGoogle.getHeaders().set("X-Auth-Token", "2deee83e549c4a6e9709871d0fd58a0a");
 
         Alumno json = requestGoogle.execute().parseAs(Alumno.class);
+        if(json!=null) return 1;
+        else return 0;
         
     }
 
-    public void updateUser(Alumno a) throws IOException {
+    public int updateUser(Alumno a) throws IOException {
          ObjectMapper m = new ObjectMapper();
         url.set("alumno", m.writeValueAsString(a));
-        HttpRequest requestGoogle = requestFactory.buildPutRequest(url, new JsonHttpContent(new JacksonFactory(), a));
+        HttpRequest requestGoogle = requestFactory.buildPostRequest(url, new JsonHttpContent(new JacksonFactory(), a));
         //    requestGoogle.getHeaders().set("X-Auth-Token", "2deee83e549c4a6e9709871d0fd58a0a");
 
         Alumno json = requestGoogle.execute().parseAs(Alumno.class);
+        if(json!=null) return 1;
+        else return 0;
         
     }
 
