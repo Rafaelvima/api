@@ -12,7 +12,7 @@ use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\RequestException;
 
 $client = new Client();
-//$header = array('headers' => array('X-Auth-Token' => '447878d6ad3e4da7bc65bac030cd061e'));
+$header = array('headers' => array('ApiKey' => '447878d6ad3e4da7bc65bac030cd061e'));
 
 
 $uri = 'http://localhost:8083/ApiCutreJava/rest/alumnos';
@@ -119,7 +119,7 @@ echo "Alumno " . $alumno->nombre . " modificado correctamente";
     default :
         echo "<br>" . "GET" . "<br>";
 
-        try {
+       try {
             $response = $client->get($uri);
 
 $alumnos = json_decode($response->getBody());

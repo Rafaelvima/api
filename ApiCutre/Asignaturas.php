@@ -5,18 +5,21 @@ To change this template file, choose Tools | Templates
 and open the template in the editor.
 -->
 <?php
-$servername = "db4free.net:3307";
-$username = "oscarnovillo";
-$password = "c557ef";
-$database = "clasesdaw";
+require 'vendor/autoload.php';
+
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\RequestException;
+
+$client = new Client();
+$header = array('headers' => array('ApiKey' => '447878d6ad3e4da7bc65bac030cd061e'));
+
+
+$uri = 'http://localhost:8083/ApiCutreJava/rest/asignaturas';
 
 // Create connection
-$conn = new mysqli($servername, $username, $password, $database);
-
 // Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+$alumno = new \stdClass;
 if (isset($_REQUEST['op'])) {
     $op = $_REQUEST['op'];
 } else {
@@ -44,127 +47,155 @@ if (isset($_REQUEST['ciclo'])) {
 }
 switch ($op) {
     case "insert":
-        $stmt = $conn->prepare("INSERT INTO ASIGNATURAS (NOMBRE, CURSO, CICLO)"
-                . "VALUES(?,?,?)");
-        $stmt->bind_param("sss", $nombreasig, $cursoasig, $cicloasig);
-        $stmt->execute();
+        $alumno->id = $idasig;
+        $alumno->nombre = $nombreasig;
+        $alumno->curso = $cursoasig;
+        $alumno->ciclo = $cicloasig;
+        try {
+            $response = $client->put($uri, [
+                'query' => [
+                    'alumno' => json_encode($alumno)
+                ]
+            ]);
+            //todo ok hasta aqui y bajaria
+            $alumno = json_decode($response->getBody());
+            echo $alumno->id . " " . $alumno->nombre . " asignatura insertada correctamente";
+        } catch (RequestException $exception) {
 
-        /**/
-        if ($stmt->affected_rows > 0) {
-            echo "New record created successfully";
-        } else {
-            echo "Error: " . $sql . "<br>" . $conn->error;
+            echo $exception->getCode();
+            $error = json_decode($exception->getResponse()->getBody());
+            echo $error->mensaje;
         }
-        echo $conn->insert_id;
         break;
     case "update":
-        $stmt = $conn->prepare("UPDATE ASIGNATURAS SET NOMBRE=?, CURSO=?, CICLO=? WHERE ID=?");
-        $stmt->bind_param("sssi", $nombreasig, $cursoasig, $cicloasig, $idasig);
-        $stmt->execute();
+        $alumno->id = $idasig;
+        $alumno->nombre = $nombreasig;
+        $alumno->curso = $cursoasig;
+        $alumno->ciclo = $cicloasig;
+        try {
+            $response = $client->post($uri, [
+                'form_params' => [
+                    'alumno' => json_encode($alumno)
+                ]
+            ]);
+            $alumno = json_decode($response->getBody());
+            echo "Asignatura " . $alumno->nombre . " modificada correctamente";
+        } catch (RequestException $exception) {
 
-        if (($stmt->affected_rows > 0)) {
-            echo "Record updated successfully";
-        } else {
-            echo "Error updating record: ";
+            echo $exception->getCode();
+            $error = json_decode($exception->getResponse()->getBody());
+            echo $error->mensaje;
         }
         break;
     case "delete":
-        // sql to delete a record
-        $stmt = $conn->prepare("DELETE FROM ASIGNATURAS WHERE id=?");
-        $stmt->bind_param("i", $idasig);
-        $stmt->execute();
+        $alumno->id = $idasig;
+        try {
+            $response = $client->delete($uri, [
+                'query' => [
+                    'alumno' => json_encode($alumno)
+                ]
+            ]);
+            $alumno = json_decode($response->getBody());
+            echo "Alumno " . $alumno->nombre . " borrado correctamente";
+        } catch (RequestException $exception) {
 
-        if (($stmt->affected_rows > 0)) {
-            echo "Record deleted successfully";
-        } else {
-            echo "Error deleting record: " . $conn->error;
+            echo $exception->getCode();
+            $error = json_decode($exception->getResponse()->getBody());
+            echo $error->mensaje;
         }
+
         break;
-        $sql = "SELECT * FROM ASIGNATURAS";
+    default :
+        echo "<br>" . "GET" . "<br>";
 
-        if (!$result = $conn->query($sql)) {
-            die('There was an error running the query [' . $conn->error . ']');
-        }
-        echo 'Total results: ' . $result->num_rows;
-}
-$sql = "SELECT * FROM `ASIGNATURAS`";
-if (!$result = $conn->query($sql)) {
-    die('There was an error running the query [' . $conn->error . ']');
-}
-echo 'Total results: ' . $result->num_rows;
-?>
+        try {
+            $response = $client->get($uri);
 
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
-        <script>
+            $alumnos = json_decode($response->getBody());
 
-            function cargarAsignatura(id, nombre, curso, ciclo) {
-                document.getElementById("nombre").value = nombre;
-                document.getElementById("idasignatura").value = id;
-                document.getElementById("curso").value = curso;
-                document.getElementById("ciclo").value = ciclo;
-
+            foreach ($alumnos as $alumno) {
+                echo $alumno->id . " " . $alumno->nombre . "<br>";
             }
-        </script>
-        <script>
-            function updForm() {
-                document.getElementById("op").value = "update";
-            }
-            function delForm() {
-                document.getElementById("op").value = "delete";
-            }
-            function insForm() {
-                document.getElementById("op").value = "insert";
-            }
-        </script>
+            ?>
+            <html>
+                <head>
+                    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+                    <title>JSP Page</title>
+                    <script>
 
-    </head>
-    <body>
+                        function cargarAsignatura(id, nombre, curso, ciclo) {
+                            document.getElementById("nombre").value = nombre;
+                            document.getElementById("idasignatura").value = id;
+                            document.getElementById("curso").value = curso;
+                            document.getElementById("ciclo").value = ciclo;
 
-        <h1>ASIGNATURAS</h1>
-        <table border="1">
+                        }
+                    </script>
+                    <script>
+                        function updForm() {
+                            document.getElementById("op").value = "update";
+                        }
+                        function delForm() {
+                            document.getElementById("op").value = "delete";
+                        }
+                        function insForm() {
+                            document.getElementById("op").value = "insert";
+                        }
+                    </script>
+
+                </head>
+                <body>
+
+                    <h1>ASIGNATURAS</h1>
+                    <table border = "1">
+                        <?php
+                        foreach ($alumnos as $alumno) {
+                            ?>
+                            <tr>
+                                <td><input type="button" value="cargar <?php echo $alumno->id ?>" 
+                                           onclick="cargarAlumno('<?php echo $alumno->id ?>',
+                                                               '<?php echo $alumno->nombre ?>',
+                                                               ' <?php echo $alumno->curso ?>',
+                                                               '<?php echo $alumno->ciclo ?>')"/>
+                                </td>
+                                <td>
+                                    <?php echo $alumno->nombre; ?>
+                                </td>
+
+                                <td>
+                                    <?php echo $alumno->curso; ?>
+                                </td>
+                                <td>
+                                    <?php echo $alumno->ciclo; ?>
+                                </td>
+                                
+                            </tr>
+                        <?php } ?> <?php
+                        echo "FIN";
+                        ?>
+
+                        <!-- -->
+
+                    </table>
+                    <form action ="asignaturas.php?op=" method="get">
+                        <input type="hidden" id="idasignatura" name="idasignatura" />
+                        <input type="text" id="nombre" name="nombre" size="12"/>
+                        <input type="text" id="curso" name="curso" size="12"/>
+                        <input type="text"  name="ciclo" id="ciclo"/>
+                        <input type="hidden" id="op" name="op"/>
+                        <button value="update" onclick="updForm();"> actualizar</button>
+                        <button value="delete" onclick="delForm();"> delete</button>
+                        <button value="insert" onclick="insForm();"> insertar</button>
+                    </form>
+
+                </body>
+            </html>
             <?php
-            while ($row = $result->fetch_assoc()) {
-                ?>
-                <tr>
-                    <td>
-                        <input type="button" value="cargar <?php echo $row['id'] ?>" 
-                               onclick="cargarAsignatura('<?php echo $row['id'] ?>',
-                                                   '<?php echo $row['NOMBRE'] ?>',
-                                                   ' <?php echo $row['CURSO'] ?>',
-                                                   '<?php echo $row['CICLO'] ?>')"/>
-                    </td> 
-                    <td>
-                        <?php echo $row['NOMBRE']; ?>
-                    </td>
+        } catch (RequestException $exception) {
 
-                    <td>
-                        <?php echo $row['CURSO']; ?>
-                    </td>
-                    <td>
-                        <?php echo $row['CICLO']; ?>
-                    </td>
-                </tr>
-
-
-            <?php } ?>
-
-
-            <!-- -->
-
-        </table>
-        <form action ="asignaturas.php?op=" method="get">
-            <input type="hidden" id="idasignatura" name="idasignatura" />
-            <input type="text" id="nombre" name="nombre" size="12"/>
-            <input type="text" id="curso" name="curso" size="12"/>
-            <input type="text"  name="ciclo" id="ciclo"/>
-            <input type="hidden" id="op" name="op"/>
-            <button value="update" onclick="updForm();"> actualizar</button>
-            <button value="delete" onclick="delForm();"> delete</button>
-            <button value="insert" onclick="insForm();"> insertar</button>
-        </form>
-
-    </body>
-</html>
+            echo $exception->getCode();
+            $error = json_decode($exception->getResponse()->getBody());
+            echo $error->mensaje;
+        }
+}
+?>
