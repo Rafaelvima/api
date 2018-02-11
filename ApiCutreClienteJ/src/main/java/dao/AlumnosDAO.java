@@ -116,16 +116,9 @@ public class AlumnosDAO {
         ObjectMapper m = new ObjectMapper();
         url.set("alumno", m.writeValueAsString(a));
         HttpRequest requestGoogle = requestFactory.buildPutRequest(url, new JsonHttpContent(new JacksonFactory(), a));
-        //    requestGoogle.getHeaders().set("X-Auth-Token", "2deee83e549c4a6e9709871d0fd58a0a");
 
         Alumno json = requestGoogle.execute().parseAs(Alumno.class);
-//        response.getWriter().print(json.getNombre());
 
-//        url.set("alumno",objectMapper.writeValueAsString(a));
-//         HttpRequest requestGoogle = requestFactory.buildPostRequest(url,  new JsonHttpContent(new JacksonFactory(), a));
-        //Alumno lista = requestGoogle.execute().parseAs(Alumno.class);
-        //request.setHeader("api",uagwbgdkah)
-        //    Alumno lista = objectMapper.readValue(requestGoogle.execute().parseAsString(),Alumno.class );
         return json;
     }
 

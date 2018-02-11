@@ -5,6 +5,18 @@
  */
 package dao;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpRequestFactory;
+import com.google.api.client.http.HttpRequestInitializer;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.http.json.JsonHttpContent;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.JsonObjectParser;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import java.io.IOException;
 import model.Asignatura;
 import java.math.BigInteger;
 import java.sql.Connection;
@@ -20,6 +32,7 @@ import java.util.logging.Logger;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
+import model.Alumno;
 
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.ResultSetHandler;
@@ -35,103 +48,68 @@ import org.springframework.jdbc.core.JdbcTemplate;
  */
 public class AsignaturasDAO
 {
+    
+    JsonFactory JSON_FACTORY = new JacksonFactory();
+    HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
+    HttpRequestFactory requestFactory = HTTP_TRANSPORT.createRequestFactory(new HttpRequestInitializer() {
+        @Override
+        public void initialize(HttpRequest request) {
+            request.setParser(new JsonObjectParser(JSON_FACTORY));
+
+        }
+    });
+    GenericUrl url = new GenericUrl("http://localhost:8083/ApiCutreJava/rest/asignaturas");
+    ObjectMapper objectMapper = new ObjectMapper();
 //Select DBUtils
 
-    public List<Asignatura> getAllAsignaturas()
+    public List<Asignatura> getAllAsignaturas() throws IOException
     {
-        List<Asignatura> lista = null;
-        DBConnection db = new DBConnection();
-        Connection con = null;
-        try
-        {
-            con = db.getConnection();
-            QueryRunner qr = new QueryRunner();
-            ResultSetHandler<List<Asignatura>> h = new BeanListHandler<Asignatura>(Asignatura.class);
-            lista = qr.query(con, "select * FROM ASIGNATURAS", h);
+        HttpRequest requestGoogle = requestFactory.buildGetRequest(url);
+ //HttpRequest requestGoogle = requestFactory.buildPutRequest(url, new JsonHttpContent(new JacksonFactory(), a));
+        //    requestGoogle.getHeaders().set("X-Auth-Token", "2deee83e549c4a6e9709871d0fd58a0a");
 
-        } catch (Exception ex)
-        {
-            Logger.getLogger(AsignaturasDAO.class.getName()).log(Level.SEVERE, null, ex);
-        } finally
-        {
-            db.cerrarConexion(con);
-        }
-        return lista;
+        List<Asignatura> json = (List) requestGoogle.execute().parseAs(Asignatura.class);
+//        List<Alumno> lista = objectMapper.readValue(requestGoogle.execute().parseAsString(),
+//                objectMapper.getTypeFactory().constructCollectionType(List.class, Alumno.class));
+        return json;
     }
     //DEL SI
 
-    public void delAsig(Asignatura u)
+    public int delAsig(Asignatura u) throws IOException
     {
-        DBConnection db = new DBConnection();
-        Connection con = null;
-        try
-        {
-            con = db.getConnection();
-            QueryRunner qr = new QueryRunner();
+       ObjectMapper m = new ObjectMapper();
+        url.set("alumno", m.writeValueAsString(u));
+        HttpRequest requestGoogle = requestFactory.buildDeleteRequest(url);
+            requestGoogle.getHeaders().set("Apikey", "2deee83e549c4a6e9709871d0fd58a0a");
 
-            int filas = qr.update(con,
-                    "DELETE FROM ASIGNATURAS WHERE ID=?",
-                    u.getId());
-
-        } catch (Exception ex)
-        {
-            Logger.getLogger(AsignaturasDAO.class.getName()).log(Level.SEVERE, null, ex);
-        } finally
-        {
-            db.cerrarConexion(con);
-        }
+        Asignatura json = requestGoogle.execute().parseAs(Asignatura.class);
+        if(json!=null) return 1;
+        else return 0;
     }
 
     //UPDATE SI
-    public void updateAsig(Asignatura u)
+    public int updateAsig(Asignatura u) throws IOException
     {
-        DBConnection db = new DBConnection();
-        Connection con = null;
-        try
-        {
-            con = db.getConnection();
-            QueryRunner qr = new QueryRunner();
+         ObjectMapper m = new ObjectMapper();
+        url.set("alumno", m.writeValueAsString(u));
+        HttpRequest requestGoogle = requestFactory.buildPostRequest(url, new JsonHttpContent(new JacksonFactory(), u));
+            requestGoogle.getHeaders().set("Apikey", "2deee83e549c4a6e9709871d0fd58a0a");
 
-            int filas = qr.update(con,
-                    "UPDATE ASIGNATURAS SET NOMBRE=?,CURSO=?"
-                    + ", CICLO=? WHERE ID=?",
-                    u.getNombre(), u.getCurso(), u.getCiclo(), u.getId());
-
-        } catch (Exception ex)
-        {
-            Logger.getLogger(AsignaturasDAO.class.getName()).log(Level.SEVERE, null, ex);
-        } finally
-        {
-            db.cerrarConexion(con);
-        }
+        Asignatura json = requestGoogle.execute().parseAs(Asignatura.class);
+        if(json!=null) return 1;
+        else return 0;
     }
 
     // insert DBUTILS SI
-    public Asignatura addAsig(Asignatura u)
+    public Asignatura addAsig(Asignatura u) throws IOException
     {
-        DBConnection db = new DBConnection();
-        Connection con = null;
+       ObjectMapper m = new ObjectMapper();
+        url.set("alumno", m.writeValueAsString(u));
+        HttpRequest requestGoogle = requestFactory.buildPutRequest(url, new JsonHttpContent(new JacksonFactory(), u));
 
-        try
-        {
-            con = db.getConnection();
-            con.setAutoCommit(false);
-            QueryRunner qr = new QueryRunner();
-            ResultSetHandler<Asignatura> h = new BeanHandler<>(Asignatura.class);
-            Asignatura id = qr.insert(con,
-                    "INSERT INTO ASIGNATURAS(ID,NOMBRE,CURSO,CICLO) VALUES(?,?,?,?)", h,
-                    u.getId(), u.getNombre(), u.getCurso(), u.getCiclo());
-            u.setId(id.getId());
-            con.commit();
+        Asignatura json = requestGoogle.execute().parseAs(Asignatura.class);
 
-        } catch (Exception ex)
-        {
-            Logger.getLogger(AsignaturasDAO.class.getName()).log(Level.SEVERE, null, ex);
-        } finally
-        {
-            db.cerrarConexion(con);
-        }
-        return u;
+        return json;
 
     }
     

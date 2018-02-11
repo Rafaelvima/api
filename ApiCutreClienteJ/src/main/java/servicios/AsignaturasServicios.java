@@ -6,6 +6,7 @@
 package servicios;
 
 import dao.AsignaturasDAO;
+import java.io.IOException;
 import java.util.List;
 import model.Asignatura;
 
@@ -16,32 +17,32 @@ import model.Asignatura;
 public class AsignaturasServicios
 {
 
-    public List<Asignatura> getAllAsignaturas()
+    public List<Asignatura> getAllAsignaturas() throws IOException
     {
         AsignaturasDAO dao = new AsignaturasDAO();
 
         return dao.getAllAsignaturas();
     }
 
-    public Asignatura addAsig(Asignatura asignaturaNuevo)
+    public Asignatura addAsig(Asignatura asignaturaNuevo) throws IOException
     {
         AsignaturasDAO dao = new AsignaturasDAO();
 
         return dao.addAsig(asignaturaNuevo);
     }
 
-    public void delAsig(Asignatura asignaturaNuevo)
+    public int delAsig(Asignatura asignaturaNuevo) throws IOException
     {
         AsignaturasDAO dao = new AsignaturasDAO();
 
-        dao.delAsig(asignaturaNuevo);
+        return dao.delAsig(asignaturaNuevo);
     }
 
-    public void updateAsig(Asignatura asignaturaNuevo)
+    public int updateAsig(Asignatura asignaturaNuevo) throws IOException
     {
         AsignaturasDAO dao = new AsignaturasDAO();
 
-        dao.updateAsig(asignaturaNuevo);
+        return dao.updateAsig(asignaturaNuevo);
     }
 
 }

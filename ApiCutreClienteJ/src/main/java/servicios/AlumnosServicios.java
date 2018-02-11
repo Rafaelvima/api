@@ -6,6 +6,7 @@
 package servicios;
 
 import dao.AlumnosDAO;
+import java.io.IOException;
 import java.util.List;
 import model.Alumno;
 
@@ -16,29 +17,29 @@ import model.Alumno;
 public class AlumnosServicios {
     
     
-    public List<Alumno> getAllAlumnos()
+    public List<Alumno> getAllAlumnos() throws IOException
     {
         AlumnosDAO dao = new AlumnosDAO();
         
         return dao.getAllAlumnosJDBC();
     }
     
-    public Alumno addAlumno(Alumno alumnoNuevo)
+    public Alumno addAlumno(Alumno alumnoNuevo) throws IOException
     {
         AlumnosDAO dao = new AlumnosDAO();
         
         return dao.insertAlumnoJDBC(alumnoNuevo);
     }
-    public void delAlumno(Alumno alumnoNuevo)
+    public int delAlumno(Alumno alumnoNuevo) throws IOException
     {
         AlumnosDAO dao = new AlumnosDAO();
         
-        dao.delUser(alumnoNuevo);
+        return dao.delUser(alumnoNuevo);
     }
-    public void updateAlumno (Alumno alumnoNuevo){
+    public int updateAlumno (Alumno alumnoNuevo) throws IOException{
          AlumnosDAO dao = new AlumnosDAO();
         
-        dao.updateUser(alumnoNuevo);
+        return dao.updateUser(alumnoNuevo);
     }
     
 }
