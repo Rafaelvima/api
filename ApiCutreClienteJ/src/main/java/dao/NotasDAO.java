@@ -51,34 +51,34 @@ public class NotasDAO {
 
     //Select DBUtils
     public List<Nota> getAllNotas() throws IOException {
- HttpRequest requestGoogle = requestFactory.buildGetRequest(url);
- //HttpRequest requestGoogle = requestFactory.buildPutRequest(url, new JsonHttpContent(new JacksonFactory(), a));
-        //    requestGoogle.getHeaders().set("X-Auth-Token", "2deee83e549c4a6e9709871d0fd58a0a");
-
+        HttpRequest requestGoogle = requestFactory.buildGetRequest(url);
+        //HttpRequest requestGoogle = requestFactory.buildPutRequest(url, new JsonHttpContent(new JacksonFactory(), a));
+        requestGoogle.getHeaders().set("Apikey", "2deee83e549c4a6e9709871d0fd58a0a");
         List<Nota> json = (List) requestGoogle.execute().parseAs(Nota.class);
-//        List<Alumno> lista = objectMapper.readValue(requestGoogle.execute().parseAsString(),
-//                objectMapper.getTypeFactory().constructCollectionType(List.class, Alumno.class));
         return json;
     }
 
     //UPDATE SI
     public int updateNota(Nota u) throws IOException {
- ObjectMapper m = new ObjectMapper();
+        ObjectMapper m = new ObjectMapper();
         url.set("alumno", m.writeValueAsString(u));
         HttpRequest requestGoogle = requestFactory.buildPostRequest(url, new JsonHttpContent(new JacksonFactory(), u));
-            requestGoogle.getHeaders().set("Apikey", "2deee83e549c4a6e9709871d0fd58a0a");
+        requestGoogle.getHeaders().set("Apikey", "2deee83e549c4a6e9709871d0fd58a0a");
 
         Nota json = requestGoogle.execute().parseAs(Nota.class);
-        if(json!=null) return 1;
-        else return 0;
+        if (json != null) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
 
     // insert DBUTILS SI
     public Nota addNota(Nota u) throws SQLException, IOException {
- ObjectMapper m = new ObjectMapper();
+        ObjectMapper m = new ObjectMapper();
         url.set("alumno", m.writeValueAsString(u));
         HttpRequest requestGoogle = requestFactory.buildPutRequest(url, new JsonHttpContent(new JacksonFactory(), u));
-
+        requestGoogle.getHeaders().set("Apikey", "2deee83e549c4a6e9709871d0fd58a0a");
         Nota json = requestGoogle.execute().parseAs(Nota.class);
 
         return json;
@@ -86,14 +86,17 @@ public class NotasDAO {
     //DEL SI
 
     public int delNota(Nota u) throws IOException {
- ObjectMapper m = new ObjectMapper();
+        ObjectMapper m = new ObjectMapper();
         url.set("alumno", m.writeValueAsString(u));
         HttpRequest requestGoogle = requestFactory.buildDeleteRequest(url);
-            requestGoogle.getHeaders().set("Apikey", "2deee83e549c4a6e9709871d0fd58a0a");
+        requestGoogle.getHeaders().set("Apikey", "2deee83e549c4a6e9709871d0fd58a0a");
 
         Asignatura json = requestGoogle.execute().parseAs(Asignatura.class);
-        if(json!=null) return 1;
-        else return 0;
+        if (json != null) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
 
 }

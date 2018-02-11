@@ -6,6 +6,7 @@
 package servicios;
 
 import dao.NotasDAO;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 import model.Nota;
@@ -17,31 +18,31 @@ import model.Nota;
 public class NotasServicios
 {
 
-    public List<Nota> getAllNotas()
+    public List<Nota> getAllNotas() throws IOException
     {
         NotasDAO dao = new NotasDAO();
 
         return dao.getAllNotas();
     }
 
-    public Nota addNota(Nota notaNuevo) throws SQLException
+    public Nota addNota(Nota notaNuevo) throws SQLException, IOException
     {
         NotasDAO dao = new NotasDAO();
 
         return dao.addNota(notaNuevo);
     }
 
-    public void delNota(Nota notaNuevo)
+    public int delNota(Nota notaNuevo) throws IOException
     {
         NotasDAO dao = new NotasDAO();
 
-        dao.delNota(notaNuevo);
+        return dao.delNota(notaNuevo);
     }
 
-    public void updateNota(Nota notaNuevo)
+    public int updateNota(Nota notaNuevo) throws IOException
     {
         NotasDAO dao = new NotasDAO();
 
-        dao.updateNota(notaNuevo);
+        return dao.updateNota(notaNuevo);
     }
 }
