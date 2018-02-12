@@ -54,29 +54,60 @@ if (isset($_REQUEST['nota'])) {
 
 switch ($op) {
     case "ver":
-        $stmt = $db->prepare("SELECT NOTA FROM NOTAS WHERE ID_ALUMNO = ? AND ID_ASIGNATURA = ?");
-        $stmt->bindParam(1, $id_alumno);
-        $stmt->bindParam(2, $id_asignatura);
-        $stmt->execute();
-        if (!$fila = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $nota = null;
-        } else {
-            $nota = $fila['NOTA'];
+       try {
+        $uri = 'http://localhost:8083/ApiCutreJava/rest/alumnos';    
+        $response = $client->get($uri);
+
+$alumnos = json_decode($response->getBody());
+$uri = 'http://localhost:8083/ApiCutreJava/rest/asignaturas';
+            $response = $client->get($uri);
+
+            $asignaturas = json_decode($response->getBody());
+       
+        } catch (RequestException $exception) {
+
+            echo $exception->getCode();
+            $error = json_decode($exception->getResponse()->getBody());
+            echo $error->mensaje;
         }
+
         break;
     case "guardar":
 
-        $stmt = $db->prepare("UPDATE NOTAS SET NOTA = ? WHERE ID_ALUMNO = ? AND ID_ASIGNATURA = ?");
-        $stmt->bindParam(1, $nota);
-        $stmt->bindParam(2, $id_alumno);
-        $stmt->bindParam(3, $id_asignatura);
-        $stmt->execute();
-        if (!($stmt->rowCount()) > 0) {
-            $stmt = $db->prepare("INSERT INTO NOTAS (ID_ALUMNO,ID_ASIGNATURA,NOTA) VALUES (?,?,?)");
-            $stmt->bindParam(1, $id_alumno);
-            $stmt->bindParam(2, $id_asignatura);
-            $stmt->bindParam(3, $nota);
-            $stmt->execute();
+        $nota->id_alumno;
+        $nota->id_asignatura;
+        $nota->nota;
+        try {
+            $response = $client->post($uri, [
+                'form_params' => [
+                    'nota' => json_encode($nota)
+                ]
+            ]);
+            $nota = json_decode($response->getBody());
+            echo "Nota " . $nota->nota . " modificada correctamente";
+        } catch (RequestException $exception) {
+
+            echo $exception->getCode();
+            $error = json_decode($exception->getResponse()->getBody());
+            echo $error->mensaje;
+        }
+        if (!($nota == null)) {
+            $asignatura->ciclo = $cicloasig;
+        try {
+            $response = $client->put($uri, [
+                'query' => [
+                    'nota' => json_encode($nota)
+                ]
+            ]);
+            //todo ok hasta aqui y bajaria
+            $nota = json_decode($response->getBody());
+            echo $nota->id_alumno . " " . $nota->id_asignatura ." nota= ". $nota->nota. " asignatura insertada correctamente";
+        } catch (RequestException $exception) {
+
+            echo $exception->getCode();
+            $error = json_decode($exception->getResponse()->getBody());
+            echo $error->mensaje;
+        }
         }
         break;
     case "borrar":
@@ -161,3 +192,7 @@ if ($op != "ver") {
         </form>
     </body>
 </html>
+
+ <?php
+       
+?>
