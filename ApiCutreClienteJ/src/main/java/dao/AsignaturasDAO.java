@@ -46,9 +46,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
  *
  * @author Rafa
  */
-public class AsignaturasDAO
-{
-    
+public class AsignaturasDAO {
+
     JsonFactory JSON_FACTORY = new JacksonFactory();
     HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
     HttpRequestFactory requestFactory = HTTP_TRANSPORT.createRequestFactory(new HttpRequestInitializer() {
@@ -62,12 +61,11 @@ public class AsignaturasDAO
     ObjectMapper objectMapper = new ObjectMapper();
 //Select DBUtils
 
-    public List<Asignatura> getAllAsignaturas() throws IOException
-    {
+    public List<Asignatura> getAllAsignaturas() throws IOException {
         HttpRequest requestGoogle = requestFactory.buildGetRequest(url);
- //HttpRequest requestGoogle = requestFactory.buildPutRequest(url, new JsonHttpContent(new JacksonFactory(), a));
+        //HttpRequest requestGoogle = requestFactory.buildPutRequest(url, new JsonHttpContent(new JacksonFactory(), a));
         //    requestGoogle.getHeaders().set("X-Auth-Token", "2deee83e549c4a6e9709871d0fd58a0a");
-
+        requestGoogle.getHeaders().set("Apikey", "2deee83e549c4a6e9709871d0fd58a0a");
         List<Asignatura> json = (List) requestGoogle.execute().parseAs(Asignatura.class);
 //        List<Alumno> lista = objectMapper.readValue(requestGoogle.execute().parseAsString(),
 //                objectMapper.getTypeFactory().constructCollectionType(List.class, Alumno.class));
@@ -75,43 +73,45 @@ public class AsignaturasDAO
     }
     //DEL SI
 
-    public int delAsig(Asignatura u) throws IOException
-    {
-       ObjectMapper m = new ObjectMapper();
-        url.set("alumno", m.writeValueAsString(u));
+    public int delAsig(Asignatura u) throws IOException {
+        ObjectMapper m = new ObjectMapper();
+        url.set("asignatura", m.writeValueAsString(u));
         HttpRequest requestGoogle = requestFactory.buildDeleteRequest(url);
-            requestGoogle.getHeaders().set("Apikey", "2deee83e549c4a6e9709871d0fd58a0a");
+        requestGoogle.getHeaders().set("Apikey", "2deee83e549c4a6e9709871d0fd58a0a");
 
         Asignatura json = requestGoogle.execute().parseAs(Asignatura.class);
-        if(json!=null) return 1;
-        else return 0;
+        if (json != null) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
 
     //UPDATE SI
-    public int updateAsig(Asignatura u) throws IOException
-    {
-         ObjectMapper m = new ObjectMapper();
-        url.set("alumno", m.writeValueAsString(u));
+    public int updateAsig(Asignatura u) throws IOException {
+        ObjectMapper m = new ObjectMapper();
+        url.set("asignatura", m.writeValueAsString(u));
         HttpRequest requestGoogle = requestFactory.buildPostRequest(url, new JsonHttpContent(new JacksonFactory(), u));
-            requestGoogle.getHeaders().set("Apikey", "2deee83e549c4a6e9709871d0fd58a0a");
+        requestGoogle.getHeaders().set("Apikey", "2deee83e549c4a6e9709871d0fd58a0a");
 
         Asignatura json = requestGoogle.execute().parseAs(Asignatura.class);
-        if(json!=null) return 1;
-        else return 0;
+        if (json != null) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
 
     // insert DBUTILS SI
-    public Asignatura addAsig(Asignatura u) throws IOException
-    {
-       ObjectMapper m = new ObjectMapper();
-        url.set("alumno", m.writeValueAsString(u));
+    public Asignatura addAsig(Asignatura u) throws IOException {
+        ObjectMapper m = new ObjectMapper();
+        url.set("asignatura", m.writeValueAsString(u));
         HttpRequest requestGoogle = requestFactory.buildPutRequest(url, new JsonHttpContent(new JacksonFactory(), u));
-
+        requestGoogle.getHeaders().set("Apikey", "2deee83e549c4a6e9709871d0fd58a0a");
         Asignatura json = requestGoogle.execute().parseAs(Asignatura.class);
 
         return json;
 
     }
-    
 
 }

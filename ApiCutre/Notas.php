@@ -20,7 +20,8 @@ $uri = 'http://localhost:8083/ApiCutreJava/rest/asignaturas';
 // Create connection
 // Check connection
 $alumno = new \stdClass;
-
+$asignatura = new \stdClass;
+$nota = new \stdClass;
 
 $alumnos = $db->prepare("SELECT * FROM ALUMNOS");
 $alumnos->setFetchMode(PDO::FETCH_ASSOC);
