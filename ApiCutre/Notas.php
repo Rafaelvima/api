@@ -47,9 +47,9 @@ if (isset($_REQUEST['id_asignatura'])) {
     $id_asignatura = null;
 }
 if (isset($_REQUEST['nota'])) {
-    $nota = $_REQUEST['nota'];
+    $vernota = $_REQUEST['nota'];
 } else {
-    $nota = null;
+    $vernota = null;
 }
 
 switch ($op) {
