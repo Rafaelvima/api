@@ -5,17 +5,21 @@ To change this template file, choose Tools | Templates
 and open the template in the editor.
 -->
 <?php
-require_once 'vendor/autoload.php';
-$servername = "db4free.net:3307";
-$username = "oscarnovillo";
-$password = "c557ef";
-$database = "clasesdaw";
-try {
-    $conn = "mysql:host=$servername;dbname=$database";
-    $db = new PDO($conn, $username, $password);
-} catch (PDOException $e) {
-    echo $e->getMessage();
-}
+require 'vendor/autoload.php';
+
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\RequestException;
+
+$client = new Client();
+$header = array('headers' => array('ApiKey' => '447878d6ad3e4da7bc65bac030cd061e'));
+
+
+$uri = 'http://localhost:8083/ApiCutreJava/rest/asignaturas';
+
+// Create connection
+// Check connection
+$alumno = new \stdClass;
 
 
 $alumnos = $db->prepare("SELECT * FROM ALUMNOS");
@@ -88,9 +92,7 @@ if ($op != "ver") {
         echo "No modificaciones";
     }
 }
-$stmt = null;
 
-$db = null;
 ?>
 <html>
     <head>

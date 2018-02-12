@@ -19,7 +19,7 @@ $uri = 'http://localhost:8083/ApiCutreJava/rest/asignaturas';
 
 // Create connection
 // Check connection
-$alumno = new \stdClass;
+$asignatura = new \stdClass;
 if (isset($_REQUEST['op'])) {
     $op = $_REQUEST['op'];
 } else {
@@ -47,19 +47,19 @@ if (isset($_REQUEST['ciclo'])) {
 }
 switch ($op) {
     case "insert":
-        $alumno->id = $idasig;
-        $alumno->nombre = $nombreasig;
-        $alumno->curso = $cursoasig;
-        $alumno->ciclo = $cicloasig;
+        $asignatura->id = $idasig;
+        $asignatura->nombre = $nombreasig;
+        $asignatura->curso = $cursoasig;
+        $asignatura->ciclo = $cicloasig;
         try {
             $response = $client->put($uri, [
                 'query' => [
-                    'alumno' => json_encode($alumno)
+                    'asignatura' => json_encode($asignatura)
                 ]
             ]);
             //todo ok hasta aqui y bajaria
-            $alumno = json_decode($response->getBody());
-            echo $alumno->id . " " . $alumno->nombre . " asignatura insertada correctamente";
+            $asignatura = json_decode($response->getBody());
+            echo $asignatura->id . " " . $asignatura->nombre . " asignatura insertada correctamente";
         } catch (RequestException $exception) {
 
             echo $exception->getCode();
@@ -68,18 +68,18 @@ switch ($op) {
         }
         break;
     case "update":
-        $alumno->id = $idasig;
-        $alumno->nombre = $nombreasig;
-        $alumno->curso = $cursoasig;
-        $alumno->ciclo = $cicloasig;
+        $asignatura->id = $idasig;
+        $asignatura->nombre = $nombreasig;
+        $asignatura->curso = $cursoasig;
+        $asignatura->ciclo = $cicloasig;
         try {
             $response = $client->post($uri, [
                 'form_params' => [
-                    'alumno' => json_encode($alumno)
+                    'asignatura' => json_encode($asignatura)
                 ]
             ]);
-            $alumno = json_decode($response->getBody());
-            echo "Asignatura " . $alumno->nombre . " modificada correctamente";
+            $asignatura = json_decode($response->getBody());
+            echo "Asignatura " . $asignatura->nombre . " modificada correctamente";
         } catch (RequestException $exception) {
 
             echo $exception->getCode();
@@ -88,15 +88,15 @@ switch ($op) {
         }
         break;
     case "delete":
-        $alumno->id = $idasig;
+        $asignatura->id = $idasig;
         try {
             $response = $client->delete($uri, [
                 'query' => [
-                    'alumno' => json_encode($alumno)
+                    'asignatura' => json_encode($asignatura)
                 ]
             ]);
-            $alumno = json_decode($response->getBody());
-            echo "Alumno " . $alumno->nombre . " borrado correctamente";
+            $asignatura = json_decode($response->getBody());
+            echo "Alumno " . $asignatura->nombre . " borrado correctamente";
         } catch (RequestException $exception) {
 
             echo $exception->getCode();
@@ -111,10 +111,10 @@ switch ($op) {
         try {
             $response = $client->get($uri);
 
-            $alumnos = json_decode($response->getBody());
+            $asignaturas = json_decode($response->getBody());
 
-            foreach ($alumnos as $alumno) {
-                echo $alumno->id . " " . $alumno->nombre . "<br>";
+            foreach ($asignaturas as $asignatura) {
+                echo $asignatura->id . " " . $asignatura->nombre . "<br>";
             }
             ?>
             <html>
@@ -149,24 +149,24 @@ switch ($op) {
                     <h1>ASIGNATURAS</h1>
                     <table border = "1">
                         <?php
-                        foreach ($alumnos as $alumno) {
+                        foreach ($asignaturas as $asignatura) {
                             ?>
                             <tr>
-                                <td><input type="button" value="cargar <?php echo $alumno->id ?>" 
-                                           onclick="cargarAlumno('<?php echo $alumno->id ?>',
-                                                               '<?php echo $alumno->nombre ?>',
-                                                               ' <?php echo $alumno->curso ?>',
-                                                               '<?php echo $alumno->ciclo ?>')"/>
+                                <td><input type="button" value="cargar <?php echo $asignatura->id ?>" 
+                                           onclick="cargarAlumno('<?php echo $asignatura->id ?>',
+                                                               '<?php echo $asignatura->nombre ?>',
+                                                               ' <?php echo $asignatura->curso ?>',
+                                                               '<?php echo $asignatura->ciclo ?>')"/>
                                 </td>
                                 <td>
-                                    <?php echo $alumno->nombre; ?>
+                                    <?php echo $asignatura->nombre; ?>
                                 </td>
 
                                 <td>
-                                    <?php echo $alumno->curso; ?>
+                                    <?php echo $asignatura->curso; ?>
                                 </td>
                                 <td>
-                                    <?php echo $alumno->ciclo; ?>
+                                    <?php echo $asignatura->ciclo; ?>
                                 </td>
                                 
                             </tr>

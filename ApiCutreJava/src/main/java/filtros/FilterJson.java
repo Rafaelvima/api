@@ -23,6 +23,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import model.Alumno;
+import model.Asignatura;
+import model.Nota;
 
 /**
  *
@@ -55,6 +57,18 @@ public class FilterJson implements Filter {
             Alumno a = mapper.readValue(alumno, new TypeReference<Alumno>() {
             });
             request.setAttribute("alumno", a);
+        }
+         String asignatura = request.getParameter("asignatura");
+        if (asignatura != null) {
+            Asignatura a = mapper.readValue(asignatura, new TypeReference<Asignatura>() {
+            });
+            request.setAttribute("asignatura", a);
+        }
+         String nota = request.getParameter("nota");
+        if (nota != null) {
+            Nota a = mapper.readValue(nota, new TypeReference<Nota>() {
+            });
+            request.setAttribute("nota", a);
         }
         // Write code here to process the request and/or response before
         // the rest of the filter chain is invoked.
