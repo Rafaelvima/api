@@ -50,14 +50,8 @@ public class Alumnos extends HttpServlet {
         //Alumno a = (Alumno) request.getAttribute("alumno");
         AlumnosServicios as = new AlumnosServicios();
         List<Alumno> alumnos = new ArrayList<>();
-        alumnos = as.getAllAlumnos();/*
-        List<Alumno> alumnos = new ArrayList<>();
-        Alumno alumno = new Alumno();
-        alumno.setNombre("Juan");
-        alumnos.add(alumno);
-        alumno = new Alumno();
-        alumno.setNombre("KIKO");
-        alumnos.add(alumno);*/
+        alumnos = as.getAllAlumnos();
+       
         request.setAttribute("json", alumnos);
             
         

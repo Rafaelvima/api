@@ -56,12 +56,7 @@ public class Asignaturas extends HttpServlet {
         AsignaturasServicios as = new AsignaturasServicios();
         List<Asignatura> asignaturas = new ArrayList<>();
         asignaturas = as.getAllAsignaturas();
-        ErrorHttp error = null;
-        if (response.getStatus() == 500) {
-            error = new ErrorHttp("se rompio");
-        }
-
-        request.setAttribute("json", error);
+        request.setAttribute("json", asignaturas);
     }
 
     @Override
