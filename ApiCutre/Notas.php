@@ -15,21 +15,21 @@ $client = new Client();
 $header = array('headers' => array('ApiKey' => '447878d6ad3e4da7bc65bac030cd061e'));
 
 
-$uri = 'http://localhost:8083/ApiCutreJava/rest/asignaturas';
+
 
 // Create connection
 // Check connection
 $alumno = new \stdClass;
 $asignatura = new \stdClass;
 $nota = new \stdClass;
-
-$alumnos = $db->prepare("SELECT * FROM ALUMNOS");
-$alumnos->setFetchMode(PDO::FETCH_ASSOC);
-$alumnos->execute();
-
-$asignaturas = $db->prepare("SELECT * FROM ASIGNATURAS");
-$asignaturas->setFetchMode(PDO::FETCH_ASSOC);
-$asignaturas->execute();
+$uri = 'http://localhost:8083/ApiCutreJava/rest/alumnos';
+$response = $client->get($uri,[
+            'header' => ["ApiKey" => "447878d6ad3e4da7bc65bac030cd061e"]]);
+            $alumnos = json_decode($response->getBody());
+$uri = 'http://localhost:8083/ApiCutreJava/rest/asignaturas';
+ $response = $client->get($uri,[
+            'header' => ["ApiKey" => "447878d6ad3e4da7bc65bac030cd061e"]]);
+            $asignaturas = json_decode($response->getBody());
 
 if (isset($_REQUEST['op'])) {
     $op = $_REQUEST['op'];
@@ -51,19 +51,17 @@ if (isset($_REQUEST['nota'])) {
 } else {
     $vernota = null;
 }
-
+$uri = 'http://localhost:8083/ApiCutreJava/rest/alumnos';
 switch ($op) {
     case "ver":
+        $nota->id_asignatura = $idasig;
+        $nota->id_alumno = $idalu;
        try {
-        $uri = 'http://localhost:8083/ApiCutreJava/rest/alumnos';    
-        $response = $client->get($uri);
+          
+        $response = $client->get($uri,[
+            'header' => ["ApiKey" => "447878d6ad3e4da7bc65bac030cd061e"]]);
+    $nota = json_decode($response->getBody());
 
-$alumnos = json_decode($response->getBody());
-$uri = 'http://localhost:8083/ApiCutreJava/rest/asignaturas';
-            $response = $client->get($uri);
-
-            $asignaturas = json_decode($response->getBody());
-       
         } catch (RequestException $exception) {
 
             echo $exception->getCode();
@@ -74,14 +72,15 @@ $uri = 'http://localhost:8083/ApiCutreJava/rest/asignaturas';
         break;
     case "guardar":
 
-        $nota->id_alumno;
-        $nota->id_asignatura;
-        $nota->nota;
+       $nota->id_asignatura = $idasig;
+        $nota->id_alumno = $idalu;
+        $nota->nota=$vernota;
         try {
-            $response = $client->post($uri, [
+            $response = $client->post($uri,[
+            'header' => ["ApiKey" => "447878d6ad3e4da7bc65bac030cd061e"], [
                 'form_params' => [
                     'nota' => json_encode($nota)
-                ]
+                ]]
             ]);
             $nota = json_decode($response->getBody());
             echo "Nota " . $nota->nota . " modificada correctamente";
@@ -91,13 +90,14 @@ $uri = 'http://localhost:8083/ApiCutreJava/rest/asignaturas';
             $error = json_decode($exception->getResponse()->getBody());
             echo $error->mensaje;
         }
-        if (!($nota == null)) {
-            $asignatura->ciclo = $cicloasig;
+        if (!($nota->nota == null)) {
+            
         try {
-            $response = $client->put($uri, [
+            $response = $client->put($uri,[
+            'header' => ["ApiKey" => "447878d6ad3e4da7bc65bac030cd061e"], [
                 'query' => [
                     'nota' => json_encode($nota)
-                ]
+                ]]
             ]);
             //todo ok hasta aqui y bajaria
             $nota = json_decode($response->getBody());
@@ -111,18 +111,26 @@ $uri = 'http://localhost:8083/ApiCutreJava/rest/asignaturas';
         }
         break;
     case "borrar":
-        $stmt = $db->prepare("DELETE FROM NOTAS WHERE ID_ALUMNO = ? AND ID_ASIGNATURA = ?");
-        $stmt->bindParam(1, $id_alumno);
-        $stmt->bindParam(2, $id_asignatura);
-        $stmt->execute();
-        break;
-}
-if ($op != "ver") {
-    if (($filas = $stmt->rowCount()) > 0) {
-        echo $filas . " filas modificadas";
-    } else {
-        echo "No modificaciones";
-    }
+        $nota->id_asignatura = $idasig;
+        $nota->id_alumno = $idalu;
+        $nota->nota=$vernota;
+        
+        try {
+            $response = $client->delete($uri,[
+            'header' => ["ApiKey" => "447878d6ad3e4da7bc65bac030cd061e"], [
+                'query' => [
+                    'nota' => json_encode($nota)
+                ]]
+            ]);
+            $nota = json_decode($response->getBody());
+            echo "Nota " . $nota->nombre . " borrado correctamente";
+        } catch (RequestException $exception) {
+
+            echo $exception->getCode();
+            $error = json_decode($exception->getResponse()->getBody());
+            echo $error->mensaje;
+        }
+
 }
 
 ?>

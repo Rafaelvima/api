@@ -52,6 +52,7 @@ public class FilterJson implements Filter {
         ((HttpServletRequest)request).getMethod();
         
         
+        
         String alumno = request.getParameter("alumno");
         if (alumno != null) {
             Alumno a = mapper.readValue(alumno, new TypeReference<Alumno>() {
@@ -74,22 +75,7 @@ public class FilterJson implements Filter {
         // the rest of the filter chain is invoked.
         // For example, a logging filter might log items on the request object,
         // such as the parameters.
-        /*
-	for (Enumeration en = request.getParameterNames(); en.hasMoreElements(); ) {
-	    String name = (String)en.nextElement();
-	    String values[] = request.getParameterValues(name);
-	    int n = values.length;
-	    StringBuffer buf = new StringBuffer();
-	    buf.append(name);
-	    buf.append("=");
-	    for(int i=0; i < n; i++) {
-	        buf.append(values[i]);
-	        if (i < n-1)
-	            buf.append(",");
-	    }
-	    log(buf.toString());
-	}
-         */
+        
     }
 
     private void doAfterProcessing(ServletRequest request, ServletResponse response)
@@ -143,7 +129,11 @@ public class FilterJson implements Filter {
 
         Throwable problem = null;
         try {
+            if( ((HttpServletRequest)request).getHeader("ApiKey").equals("447878d6ad3e4da7bc65bac030cd061e"))
             chain.doFilter(request, response);
+            else{
+                
+            }
         } catch (Throwable t) {
             // If an exception is thrown somewhere down the filter chain,
             // we still want to execute our after processing, and then

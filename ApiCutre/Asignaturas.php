@@ -52,10 +52,11 @@ switch ($op) {
         $asignatura->curso = $cursoasig;
         $asignatura->ciclo = $cicloasig;
         try {
-            $response = $client->put($uri, [
+            $response = $client->put($uri,[
+            'header' => ["ApiKey" => "447878d6ad3e4da7bc65bac030cd061e"], [
                 'query' => [
                     'asignatura' => json_encode($asignatura)
-                ]
+                ]]
             ]);
             //todo ok hasta aqui y bajaria
             $asignatura = json_decode($response->getBody());
@@ -73,10 +74,11 @@ switch ($op) {
         $asignatura->curso = $cursoasig;
         $asignatura->ciclo = $cicloasig;
         try {
-            $response = $client->post($uri, [
+            $response = $client->post($uri,[
+            'header' => ["ApiKey" => "447878d6ad3e4da7bc65bac030cd061e"], [
                 'form_params' => [
                     'asignatura' => json_encode($asignatura)
-                ]
+                ]]
             ]);
             $asignatura = json_decode($response->getBody());
             echo "Asignatura " . $asignatura->nombre . " modificada correctamente";
@@ -90,10 +92,11 @@ switch ($op) {
     case "delete":
         $asignatura->id = $idasig;
         try {
-            $response = $client->delete($uri, [
+            $response = $client->delete($uri,[
+            'header' => ["ApiKey" => "447878d6ad3e4da7bc65bac030cd061e"], [
                 'query' => [
                     'asignatura' => json_encode($asignatura)
-                ]
+                ]]
             ]);
             $asignatura = json_decode($response->getBody());
             echo "Alumno " . $asignatura->nombre . " borrado correctamente";
@@ -109,7 +112,8 @@ switch ($op) {
         echo "<br>" . "GET" . "<br>";
 
         try {
-            $response = $client->get($uri);
+            $response = $client->get($uri,[
+            'header' => ["ApiKey" => "447878d6ad3e4da7bc65bac030cd061e"]]);
 
             $asignaturas = json_decode($response->getBody());
 
