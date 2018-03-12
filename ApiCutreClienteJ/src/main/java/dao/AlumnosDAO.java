@@ -45,9 +45,9 @@ public class AlumnosDAO {
  //HttpRequest requestGoogle = requestFactory.buildPutRequest(url, new JsonHttpContent(new JacksonFactory(), a));
         //    requestGoogle.getHeaders().set("X-Auth-Token", "2deee83e549c4a6e9709871d0fd58a0a");
 
-        List<Alumno> json = (List) requestGoogle.execute().parseAs(Alumno.class);
-//        List<Alumno> lista = objectMapper.readValue(requestGoogle.execute().parseAsString(),
-//                objectMapper.getTypeFactory().constructCollectionType(List.class, Alumno.class));
+//        List<Alumno> json = (List) requestGoogle.execute().parseAs(Alumno.class);
+        List<Alumno> lista = objectMapper.readValue(requestGoogle.execute().parseAsString(),
+                objectMapper.getTypeFactory().constructCollectionType(List.class, Alumno.class));
         return json;
         //    List<GenericJson> json = (List) requestGoogle.execute().parseAs(type);
         // HttpRequest requestGoogle = requestFactory.buildPostRequest(url, new UrlEncodedContent(data));

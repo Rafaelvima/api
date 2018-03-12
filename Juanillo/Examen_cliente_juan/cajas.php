@@ -15,10 +15,10 @@ require 'vendor/autoload.php';
 if (isset($_GET['name'])){$name = $_GET['name'];} else {$name=null;}
 if (isset($_GET['password'])){$password = $_GET['password'];} else {$password=null;}
 
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\User;
+use GuzzleHttp\Exception\UserException;
 
-$client = new Client();
+$user = new User();
 
 $uri = 'http://localhost:8080/Examen2EVA/rest/RestLogin';
 
@@ -29,13 +29,13 @@ $usuario->name = $name;
 $usuario->password = $password;
 
 //$header = array('headers' => array('X-Auth-Token' => '447878d6ad3e4da7bc65bac030cd061e'));
-$request = $client->request('GET', $uri, ['query' => ['usuario' => json_encode($usuario)]]);
+$request = $user->request('GET', $uri, ['query' => ['usuario' => json_encode($usuario)]]);
 $alumnos = json_decode($request->getBody());
 if ($alumnos == 1)
 { 
     $uri = 'http://localhost:8080/Examen2EVA/rest/RestCajas';
   //$header = array('headers' => array('X-Auth-Token' => '447878d6ad3e4da7bc65bac030cd061e'));
-    $response = $client->request('GET', $uri, ['query' => ['usuario' => json_encode($usuario)]]);
+    $response = $user->request('GET', $uri, ['query' => ['usuario' => json_encode($usuario)]]);
     $cajas = json_decode($response->getBody());
     ?>
         <h2>Lista de cajas</h2>

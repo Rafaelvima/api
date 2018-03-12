@@ -5,7 +5,23 @@
  */
 package dao;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpRequestFactory;
+import com.google.api.client.http.HttpRequestInitializer;
+import com.google.api.client.http.HttpResponse;
+import com.google.api.client.http.HttpResponseException;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.UrlEncodedContent;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.http.json.JsonHttpContent;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.JsonObjectParser;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.util.GenericData;
 import config.Configuration;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.logging.Level;
@@ -19,64 +35,75 @@ import org.springframework.jdbc.core.JdbcTemplate;
  * @author Yo
  */
 public class UsersDAO {
-
-  
     
-    public User getPassByNombre(String nombre) {
-        User u;
-        try {
-            JdbcTemplate jtm = new JdbcTemplate(DBConnection.getInstance().getDataSource());
-            u =(User) jtm.queryForObject("select * from users where us_nom=?", new Object[]{nombre}, new BeanPropertyRowMapper(User.class));
-        } catch (Exception ex) {
-            Logger.getLogger(UsersDAO.class.getName()).log(Level.SEVERE, null, ex);
-            u = null;
+    JsonFactory JSON_FACTORY = new JacksonFactory();
+    HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
+    HttpRequestFactory requestFactory = HTTP_TRANSPORT.createRequestFactory(new HttpRequestInitializer() {
+        @Override
+        public void initialize(HttpRequest request) {
+            request.setParser(new JsonObjectParser(JSON_FACTORY));
+            
         }
-        return u;
+    });
+    GenericUrl url = new GenericUrl("http://localhost:8083/DefinitivaApiServer/rest/users");
+    ObjectMapper objectMapper = new ObjectMapper();
+    
+    public List<User> getAllUsers() throws IOException {
+        List<User> json =null;
+        try{
+            HttpRequest requestGoogle = requestFactory.buildGetRequest(url);
+        requestGoogle.getHeaders().set("Apikey", "2");
+        HttpResponse response = requestGoogle.execute();
+        ObjectMapper mapper = new ObjectMapper();
+         json = objectMapper.readValue(response.getContent(),
+                objectMapper.getTypeFactory().constructCollectionType(List.class, User.class));
+        }
+        catch (HttpResponseException ex){
+            
+        }catch (IOException ex){
+            
+        }
+        
+        return json;
+    }
+    
+    public int addUser(User a) throws IOException {
+        ObjectMapper m = new ObjectMapper();
+        url.set("user", m.writeValueAsString(a));
+        HttpRequest requestGoogle = requestFactory.buildPutRequest(url, new JsonHttpContent(new JacksonFactory(), a));
+        requestGoogle.getHeaders().set("Apikey", "2");
+        User json = requestGoogle.execute().parseAs(User.class);
+        if (json != null) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
 
-    public List<User> getAllUsers() {
-        List<User> lu=null;
-        try {
-            JdbcTemplate jtm = new JdbcTemplate(DBConnection.getInstance().getDataSource());
-            lu =jtm.query("select * from users",  new BeanPropertyRowMapper(User.class));
-        } catch (Exception ex) {
-            Logger.getLogger(UsersDAO.class.getName()).log(Level.SEVERE, null, ex);
-            lu = null;
+    public int deleteUser(User a) throws IOException {
+        ObjectMapper m = new ObjectMapper();
+        url.set("user", m.writeValueAsString(a));
+        HttpRequest requestGoogle = requestFactory.buildDeleteRequest(url);
+        requestGoogle.getHeaders().set("Apikey", "2");
+        User json = requestGoogle.execute().parseAs(User.class);
+        if (json != null) {
+            return 1;
+        } else {
+            return 0;
         }
-        return lu;
     }
 
-    public int addUser(User u) {
-         int a;
-        try {
-            JdbcTemplate jtm = new JdbcTemplate(DBConnection.getInstance().getDataSource());
-            a = jtm.update("insert users (us_nom,us_pass) values(?,?)",u.getUs_nom(),u.getUs_pass() );
-        } catch (Exception ex) {
-            Logger.getLogger(UsersDAO.class.getName()).log(Level.SEVERE, null, ex);
-            a = 0;
+    public int updateUser(User a) throws IOException {
+        ObjectMapper m = new ObjectMapper();
+        GenericData data = new GenericData();
+        data.put("user", m.writeValueAsString(a));
+        HttpRequest requestGoogle = requestFactory.buildPostRequest(url, new UrlEncodedContent(data));
+        requestGoogle.getHeaders().set("Apikey", "2");
+        User json = requestGoogle.execute().parseAs(User.class);
+        if (json != null) {
+            return 1;
+        } else {
+            return 0;
         }
-        return a;
-    }
-    public int deleteUser(User u) {
-         int a;
-        try {
-            JdbcTemplate jtm = new JdbcTemplate(DBConnection.getInstance().getDataSource());
-            a = jtm.update("delete from users where us_nom=?",u.getUs_nom());
-        } catch (Exception ex) {
-            Logger.getLogger(UsersDAO.class.getName()).log(Level.SEVERE, null, ex);
-            a = 0;
-        }
-        return a;
-    }
-    public int updateUser(User u) {
-         int a;
-        try {
-            JdbcTemplate jtm = new JdbcTemplate(DBConnection.getInstance().getDataSource());
-            a = jtm.update("update users set us_pass=? where us_nom=?",u.getUs_pass(),u.getUs_nom());
-        } catch (Exception ex) {
-            Logger.getLogger(UsersDAO.class.getName()).log(Level.SEVERE, null, ex);
-            a = 0;
-        }
-        return a;
     }
 }

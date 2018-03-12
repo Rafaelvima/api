@@ -1,0 +1,12 @@
+{
+    "name": "vendor/apiphphsi",
+    "description": "Description of project Apiphphsi.",
+    "authors": [
+        {
+            "name": "Rafa",
+            "email": "your@email.here"
+        }
+    ],"require": {
+    "guzzlehttp/guzzle": "6.3.0"
+    }
+}

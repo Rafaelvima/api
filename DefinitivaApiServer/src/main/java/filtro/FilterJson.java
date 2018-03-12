@@ -49,7 +49,7 @@ public class FilterJson implements Filter {
         }
         ObjectMapper mapper = new ObjectMapper();
         ((HttpServletRequest)request).getMethod();
-        
+        ((HttpServletRequest)request).getHeader("Apikey");
         
         
         String user = request.getParameter("user");
@@ -117,11 +117,11 @@ public class FilterJson implements Filter {
 
         Throwable problem = null;
         try {
-            if( ((HttpServletRequest)request).getHeader("ApiKey").equals("si"))
+            
             chain.doFilter(request, response);
-            else{
+            
                 
-            }
+            
         } catch (Throwable t) {
             // If an exception is thrown somewhere down the filter chain,
             // we still want to execute our after processing, and then

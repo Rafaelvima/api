@@ -21,7 +21,7 @@ import utils.Constantes;
  *
  * @author Rafa
  */
-@WebServlet(name = "Users", urlPatterns = {"/secure/users"})
+@WebServlet(name = "Users", urlPatterns = {"/users"})
 public class Users extends HttpServlet {
 
     /**
