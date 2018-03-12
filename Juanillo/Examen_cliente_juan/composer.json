@@ -1,0 +1,13 @@
+{
+    "name": "vendor/examen-cliente-juan",
+    "description": "Description of project Examen_cliente_juan.",
+    "authors": [
+        {
+            "name": "DAW",
+            "email": "your@email.here"
+        }
+    ],
+    "require": {
+    "guzzlehttp/guzzle": "6.3.0"
+    }
+}
