@@ -16,7 +16,7 @@ import modelo.User;
 
 /**
  *
- * @author DAW
+ * @author Rafa
  */
 public class ServiciosCajas
 {
@@ -52,6 +52,14 @@ public class ServiciosCajas
     {
         CajaDAO a = new CajaDAO();
         return a.addCaja(caja);
+    }
+    public boolean getCaja2(String name){
+        CajaDAO a = new CajaDAO();
+       Caja caja = a.getCaja(name);
+       if(caja!=null){
+           return false;
+       }
+       else return true;
     }
     
     public String getCaja(String name)

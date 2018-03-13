@@ -18,11 +18,11 @@ import servicios.ServiciosUsuarios;
 
 /**
  *
- * @author DAW
+ * @author Rafa
  */
 @WebServlet(name = "RestLogin", urlPatterns =
 {
-    "/rest/RestLogin"
+    "/rest/restlogin"
 })
 public class RestLogin extends HttpServlet
 {

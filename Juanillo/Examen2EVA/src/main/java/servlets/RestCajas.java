@@ -22,14 +22,13 @@ import servicios.ServiciosCajas;
 
 /**
  *
- * @author DAW
+ * @author Rafa
  */
-@WebServlet(name = "RestCajas", urlPatterns =
-{
-    "/rest/RestCajas"
-})
-public class RestCajas extends HttpServlet
-{
+@WebServlet(name = "RestCajas", urlPatterns
+        = {
+            "/rest/restcajas"
+        })
+public class RestCajas extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -41,22 +40,8 @@ public class RestCajas extends HttpServlet
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException
-    {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter())
-        {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet RestCajas</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet RestCajas at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
+            throws ServletException, IOException {
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -70,12 +55,11 @@ public class RestCajas extends HttpServlet
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException
-    {
+            throws ServletException, IOException {
         ServiciosCajas a = new ServiciosCajas();
         User usuario = (User) request.getAttribute("usuario");
         Collection<Caja> cajas = a.getAllCajasUser(usuario);
-        
+
         request.setAttribute("json", cajas);
     }
 
@@ -89,9 +73,8 @@ public class RestCajas extends HttpServlet
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException
-    {
-        
+            throws ServletException, IOException {
+
         Caja caja = (Caja) request.getAttribute("caja");
         ServiciosCajas a = new ServiciosCajas();
         String resultado = a.getCaja(caja.getNombre());
@@ -110,55 +93,60 @@ public class RestCajas extends HttpServlet
      */
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException
-    {
-        String funcionalidad = request.getParameter("funcionalidad");
+            throws ServletException, IOException {
+        String op2 = request.getParameter("op2");
         ServiciosCajas a = new ServiciosCajas();
         Caja caja = new Caja();
         caja = (Caja) request.getAttribute("caja");
-        
-        if (funcionalidad.equals("add_caja"))
-        {
+
+        if (op2.equals("add_caja")) {
             User usuario = (User) request.getAttribute("usuario");
-            
-            //Primero creamos la caja
-            Caja caja1 = new Caja(caja.getNombre());
-            boolean add = a.addCaja(caja1);
+            Caja cajita = new Caja(caja.getNombre());
+            boolean add = a.addCaja(cajita);
+        int resultado;
+            if (add == false) {
+                //la caja ya existe
+                if (a.addCajaAUser(usuario, cajita) == true) {
+                    //caja existente añadida
+                    resultado = 1;
+                } else {
+                    //caja existe y no se ha añadadido
+                    resultado = 0;
+                }
+            }
+            //caja creada
+                else{
+                if (a.addCajaAUser(usuario, cajita) == true){
+                    //caja creada y añdida
+                resultado = 2;
+            }
+                else{
+                    //caja creada y no añadida a naide
+                    resultado = -1;
+                }
+            }
 
-            //Ahora la asignamos a un usuario y comprobamos si se ha hecho correctamente
-            int resultado;
-            if (a.addCajaAUser(usuario, caja1) == true && add == true)
-            {
-                resultado = 1;
+                request.setAttribute("json", resultado);
+            } else if (op2.equals("add_cosa")) {
+                Cosa cosa = (Cosa) request.getAttribute("cosa");
+                request.setAttribute("json", a.addCosaACaja(cosa, caja));
+            } else if (op2.equals("add_cantidad")) {
+                Cosa cosa = (Cosa) request.getAttribute("cosa");
+                request.setAttribute("json", a.addCantidadCosaACaja(cosa, caja));
             }
-            else
-            {
-                resultado = 0;
-            }
-            request.setAttribute("json", resultado);
+
         }
-        else if(funcionalidad.equals("add_cosa"))
-        {
-            Cosa cosa = (Cosa) request.getAttribute("cosa");
-            request.setAttribute("json", a.addCosaACaja(cosa, caja));
-        }
-        else if(funcionalidad.equals("add_cantidad"))
-        {
-            Cosa cosa = (Cosa) request.getAttribute("cosa");
-            request.setAttribute("json", a.addCantidadCosaACaja(cosa, caja));
-        }
+
+        /**
+         * Returns a short description of the servlet.
+         *
+         * @return a String containing servlet description
+         */
+        @Override
+        public String getServletInfo
         
-    }
-
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo()
-    {
+            () {
         return "Short description";
-    }// </editor-fold>
+        }// </editor-fold>
 
-}
+    }

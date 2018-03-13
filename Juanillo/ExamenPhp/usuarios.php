@@ -25,7 +25,7 @@
     use GuzzleHttp\Exception\ClientException;
     $client = new Client();
     
-    $uri = 'http://localhost:8080/Examen2EVA/rest/RestUsuaros';
+    $uri = 'http://localhost:8083/Examen2EVA/rest/RestUsuaros';
     //$header = array('headers' => array('X-Auth-Token' => '447878d6ad3e4da7bc65bac030cd061e'));
     $response = $client->request('GET', $uri);
     $usuarios = json_decode($response->getBody());
