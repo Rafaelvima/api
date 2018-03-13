@@ -1,0 +1,12 @@
+{
+    "name": "vendor/examen-final",
+    "description": "Description of project ExamenFinal.",
+    "authors": [
+        {
+            "name": "rafa",
+            "email": "your@email.here"
+        }
+    ],"require": {
+    "guzzlehttp/guzzle": "6.3.0"
+    }
+}
